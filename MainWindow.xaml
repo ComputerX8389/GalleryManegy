@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:GalleryManegy"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+    <StackPanel>
+        <TextBlock Text="{Binding Path=ImageModel.FullPath}"></TextBlock>
+        <Button Content="Change Name" Command="{Binding Path=ChangeNameCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+    </StackPanel>
 </Window>
