@@ -23,12 +23,7 @@ namespace GalleryManegy
     {
         public MainWindow()
         {
-            var view = new MainWindowViewModel();
-
-            DataContext = view;
             InitializeComponent();
-
-            view.ImageModel.FullPath = "Test";
         }
     }
 }

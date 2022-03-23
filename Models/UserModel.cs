@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GalleryManegy.Models
+{
+    internal class UserModel : ModelBase
+    {
+        public int Id;
+
+        private string _fullName = "";
+        public string FullName { get => _fullName; set => SetProperty(ref _fullName, value); }
+
+        private string _username = "";
+        public string Username { get => _username; set => SetProperty(ref _username, value); }
+
+        private string _password = "";
+        public string Password { get => _password; set => SetProperty(ref _password, value); }
+
+        private DateTime _created;
+        public DateTime Created { get => _created; set => SetProperty(ref _created, value); }
+
+        private DateTime _lastLogin;
+        public DateTime LastLogin { get => _lastLogin; set => SetProperty(ref _lastLogin, value); }
+    }
+}
