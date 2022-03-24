@@ -8,7 +8,7 @@ namespace GalleryManegy.Models
 {
     internal class UserModel : ModelBase
     {
-        public int Id;
+        public int Id { get; set; }
 
         private string _fullName = "";
         public string FullName { get => _fullName; set => SetProperty(ref _fullName, value); }

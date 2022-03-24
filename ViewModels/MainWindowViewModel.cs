@@ -1,4 +1,5 @@
-﻿using GalleryManegy.Models;
+﻿using GalleryManegy.Handlers;
+using GalleryManegy.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,9 +18,14 @@ namespace GalleryManegy.ViewModels
         public ICommand ChangeNameCommand => _changeDisplayNameCommand;
         
         private readonly DelegateCommand _changeDisplayNameCommand;
+        private readonly DatabaseContext DatabaseContext;
+        private readonly FileScanner FileScanner;
 
         public MainWindowViewModel()
         {
+            DatabaseContext = new();
+            FileScanner = new(DatabaseContext);
+
             ImageModel = new ImageModel()
             {
                 FileName = "Testing"

@@ -8,7 +8,7 @@ namespace GalleryManegy.Models
 {
     internal class ImageModel : ModelBase
     {
-        public int Id;
+        public int Id { get; set; }
 
         private UserModel _user;
         public UserModel User { get { return _user; } set => SetProperty(ref _user, value); }
