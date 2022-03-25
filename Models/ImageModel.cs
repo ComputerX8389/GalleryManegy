@@ -1,13 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
+using System.Windows.Media.Imaging;
 
 namespace GalleryManegy.Models
 {
     internal class ImageModel : ModelBase
     {
+        public ImageModel() { }
+
+        public ImageModel(FileInfo file, UserModel user)
+        {
+            FileName = file.Name;
+            // DirectoryName might be null for some reason, I dont belive it
+            FileLocation = file.DirectoryName;
+            FullName = file.FullName;
+            FileType = file.Extension;
+            Created = file.CreationTime;
+            Modified = file.LastWriteTime;
+            Scanned = DateTime.Now;
+            Size = file.Length;
+            User = user;
+
+            var img = new BitmapImage(new Uri(file.FullName));
+
+            Width = img.PixelWidth;
+            Height = img.PixelHeight;
+        }
+
         public int Id { get; set; }
 
         private UserModel _user;
@@ -16,8 +40,11 @@ namespace GalleryManegy.Models
         private string _fileName = "";
         public string FileName { get => _fileName; set => SetProperty(ref _fileName, value); }
 
-        private string _fileLocation = "";
-        public string FileLocation { get => _fileLocation; set => SetProperty(ref _fileLocation, value); }
+        private string? _fileLocation = "";
+        public string? FileLocation { get => _fileLocation; set => SetProperty(ref _fileLocation, value); }
+
+        private string _fullName = "";
+        public string FullName { get => _fullName; set => SetProperty(ref _fullName, value); }
 
         private int _width;
         public int Width { get => _width; set => SetProperty(ref _width, value); }
@@ -25,11 +52,8 @@ namespace GalleryManegy.Models
         private int _height;
         public int Height { get => _height; set => SetProperty(ref _height, value); }
 
-        private int _bitDepth;
-        public int BitDepth { get => _bitDepth; set => SetProperty(ref _bitDepth, value); }
-
-        private FileTypes _fileType;
-        public FileTypes FileType { get => _fileType; set => SetProperty(ref _fileType, value); }
+        private string _fileType;
+        public string FileType { get => _fileType; set => SetProperty(ref _fileType, value); }
 
         private DateTime _created;
         public DateTime Created { get => _created; set => SetProperty(ref _created, value); }
@@ -42,12 +66,5 @@ namespace GalleryManegy.Models
 
         private long _size;
         public long Size { get => _size; set => SetProperty(ref _size, value); }
-
-        internal enum FileTypes
-        {
-            PNG,
-            JPEG,
-            BMP,
-        }
     }
 }

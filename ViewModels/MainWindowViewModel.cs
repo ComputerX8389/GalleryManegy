@@ -16,6 +16,7 @@ namespace GalleryManegy.ViewModels
     {
         public ImageModel ImageModel { get; set; }
         public ICommand ChangeNameCommand => _changeDisplayNameCommand;
+        public UserModel UserModel { get; private set; }
         
         private readonly DelegateCommand _changeDisplayNameCommand;
         private readonly DatabaseContext DatabaseContext;
@@ -24,7 +25,18 @@ namespace GalleryManegy.ViewModels
         public MainWindowViewModel()
         {
             DatabaseContext = new();
-            FileScanner = new(DatabaseContext);
+            // Add temp user
+            //DatabaseContext.Users.Add(new UserModel()
+            //{
+            //    FullName = "Tobias Steffensen",
+            //    Username = "steff",
+            //    Password = "123qwe123",
+            //    Created = DateTime.Now,
+            //    LastLogin = DateTime.Now,
+            //});
+            //DatabaseContext.SaveChanges();
+            UserModel = DatabaseContext.Users.FirstOrDefault(U => U.Username == "steff");
+            FileScanner = new(DatabaseContext, UserModel);
 
             ImageModel = new ImageModel()
             {
