@@ -12,7 +12,6 @@ namespace GalleryManegy
     {
         public DbSet<ImageModel> Images { get; set; }
         public DbSet<UserModel> Users { get; set; }
-        public DbSet<UnsupportedFile> UnsupportedFiles { get; set; }
 
         public DatabaseContext()
         {

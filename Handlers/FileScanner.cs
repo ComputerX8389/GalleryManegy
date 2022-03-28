@@ -14,13 +14,6 @@ namespace GalleryManegy.Handlers
         private readonly DatabaseContext Dbcontext;
         private readonly UserModel User;
 
-        // Todo Get from settings
-        private readonly List<string> AllowedExtensions = new()
-        {
-            "PNG",
-            "JPEG",
-            "JPG"
-        };
         private readonly DirectoryInfo StartingDir = new(@"C:\Users\STEFF\Desktop\Pics");
 
         public FileScanner(DatabaseContext context, UserModel currentUser)
@@ -34,28 +27,23 @@ namespace GalleryManegy.Handlers
         private async Task ScanAsync()
         {
             await ScanFolder(StartingDir);
+            ScanForDeleted(StartingDir);
             while (true)
             {
                 Debug.WriteLine("lol");
-                    await Task.Delay(2000);
+                await Task.Delay(2000);
             }
         }
 
         private async Task ScanFolder(DirectoryInfo path)
-        {       
+        {
+            await Task.Delay(5000);
             var files = path.GetFiles();
             var dirs = path.GetDirectories();
 
             foreach (var file in files)
             {
-                if (AllowdExtension(file))
-                {
-                    AddImage(file);
-                }
-                else
-                {
-                    AddUnsurported(file);
-                }
+                AddImage(file);
                 // Do not strees user computer too much. Wait a bit before next pixture
                 // Todo Get from settings
                 await Task.Delay(100);
@@ -69,6 +57,32 @@ namespace GalleryManegy.Handlers
             }
         }
 
+        private void ScanForDeleted(DirectoryInfo path)
+        {
+            var imagesToDelete = new List<ImageModel>();
+            var images = Dbcontext.Images.Where(i => i.User.Id == User.Id);
+
+            foreach (var image in images)
+            {
+                // Remove file from db if root path has chaged
+                if (!image.FullName.Contains(path.FullName))
+                {
+                    imagesToDelete.Add(image);
+                }
+
+                // Remove file from db if removed from disk
+                if (!File.Exists(image.FullName))
+                {
+                    imagesToDelete.Add(image);
+                }
+            }
+
+            Debug.WriteLine($"Removing {imagesToDelete.Count} images");
+
+            Dbcontext.Images.RemoveRange(imagesToDelete);
+            Dbcontext.SaveChanges();
+        }
+
         private void AddImage(FileInfo file)
         {
             var img = Dbcontext.Images.FirstOrDefault(i => i.FullName == file.FullName);
@@ -80,35 +94,9 @@ namespace GalleryManegy.Handlers
             }
             else
             {
-                Debug.WriteLine($"Image {file.Name} already in database");
+                Debug.WriteLine($"Updating image {file.Name}");
+                img.Update(file, User);
             }
-        }
-
-        private void AddUnsurported(FileInfo file)
-        {
-            var unsupported = Dbcontext.UnsupportedFiles.FirstOrDefault(i => i.FullName == file.FullName);
-
-            if (unsupported == null)
-            {
-                Debug.WriteLine($"Adding UnsupportedFile {file.Name}");
-                Dbcontext.UnsupportedFiles.Add(new UnsupportedFile(file, User));
-            }
-            else
-            {
-                Debug.WriteLine($"UnsupportedFile {file.Name} already in database");
-            }
-        }
-
-        private bool AllowdExtension(FileInfo file)
-        {
-            foreach (var extension in AllowedExtensions)
-            {
-                if (file.Extension.Remove(0, 1).ToLower() == extension.ToLower())
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

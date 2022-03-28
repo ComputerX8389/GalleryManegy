@@ -15,21 +15,8 @@ namespace GalleryManegy.Models
 
         public ImageModel(FileInfo file, UserModel user)
         {
-            FileName = file.Name;
-            // DirectoryName might be null for some reason, I dont belive it
-            FileLocation = file.DirectoryName;
-            FullName = file.FullName;
-            FileType = file.Extension;
-            Created = file.CreationTime;
-            Modified = file.LastWriteTime;
             Scanned = DateTime.Now;
-            Size = file.Length;
-            User = user;
-
-            var img = new BitmapImage(new Uri(file.FullName));
-
-            Width = img.PixelWidth;
-            Height = img.PixelHeight;
+            Update(file, user);
         }
 
         public int Id { get; set; }
@@ -66,5 +53,50 @@ namespace GalleryManegy.Models
 
         private long _size;
         public long Size { get => _size; set => SetProperty(ref _size, value); }
+
+        private bool _unsupported;
+        public bool Unsupported { get => _unsupported; set => SetProperty(ref _unsupported, value); }
+
+        // Todo Get from settings
+        private readonly List<string> AllowedExtensions = new()
+        {
+            "PNG",
+            "JPEG",
+            "JPG"
+        };
+
+        public void Update(FileInfo file, UserModel user)
+        {
+            FileName = file.Name;
+            // DirectoryName might be null for some reason, I dont belive it
+            FileLocation = file.DirectoryName;
+            FullName = file.FullName;
+            FileType = file.Extension;
+            Created = file.CreationTime;
+            Modified = file.LastWriteTime;
+            Size = file.Length;
+            User = user;
+            Unsupported = IsUnsupported(file.Extension);
+
+            if (Unsupported == false)
+            {
+                var img = new BitmapImage(new Uri(file.FullName));
+
+                Width = img.PixelWidth;
+                Height = img.PixelHeight;
+            }
+        }
+
+        private bool IsUnsupported(string extension)
+        {
+            foreach (var allowedExtension in AllowedExtensions)
+            {
+                if (extension.Remove(0, 1).ToLower() == allowedExtension.ToLower())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
