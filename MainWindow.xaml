@@ -4,15 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GalleryManegy" 
-        xmlns:viewmodels="clr-namespace:GalleryManegy.ViewModels" 
+        xmlns:viewmodels="clr-namespace:GalleryManegy.ViewModels"
+        xmlns:view="clr-namespace:GalleryManegy.Views"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.DataContext>
         <viewmodels:MainWindowViewModel/>
     </Window.DataContext>
-    <StackPanel>
-        <TextBlock Text="{Binding Path=ImageModel.FileName}"></TextBlock>
-        <Button Content="Change Name" Command="{Binding Path=ChangeNameCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
-    </StackPanel>
+    <view:GalleryView />
 </Window>

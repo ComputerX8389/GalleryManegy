@@ -22,7 +22,7 @@ namespace GalleryManegy.ViewModels
         private readonly DatabaseContext DatabaseContext;
         private readonly FileScanner FileScanner;
 
-        public MainWindowViewModel()
+        public MainWindowViewModel() : base("MainWindow")
         {
             DatabaseContext = new();
             // Add temp user
@@ -36,7 +36,7 @@ namespace GalleryManegy.ViewModels
             //});
             //DatabaseContext.SaveChanges();
             UserModel = DatabaseContext.Users.FirstOrDefault(U => U.Username == "steff");
-            FileScanner = new(DatabaseContext, UserModel);
+            //FileScanner = new(DatabaseContext, UserModel);
 
             ImageModel = new ImageModel()
             {
