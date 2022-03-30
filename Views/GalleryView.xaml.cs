@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalleryManegy.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,11 @@ namespace GalleryManegy.Views
         public GalleryView()
         {
             InitializeComponent();
+        }
+
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            (DataContext as GalleryViewModel).OnChangeSize(e.NewSize);
         }
     }
 }

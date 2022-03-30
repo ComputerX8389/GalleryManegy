@@ -7,29 +7,53 @@
              xmlns:viewmodels="clr-namespace:GalleryManegy.ViewModels"
              xmlns:models="clr-namespace:GalleryManegy.Models"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" 
+             SizeChanged="UserControl_SizeChanged">
     <UserControl.DataContext>
         <viewmodels:GalleryViewModel/>
     </UserControl.DataContext>
 
     <UserControl.Resources>
+
         <DataTemplate DataType = "{x:Type models:ImageModel}">
-                <!--<Image Source="{Binding Path=FullName}" />-->
-            <Grid>
-                <TextBlock Text = "{Binding Path = FileLocation}" />
-            </Grid>
+                <Image Source="{Binding FullName}" 
+                   Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.RowWidth}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ImageRow">
+            <ItemsControl ItemsSource = "{Binding}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            
-            <TextBlock Text="{Binding Path=Images.Count}"></TextBlock>
-            <ListBox ItemsSource = "{Binding Images}" Grid.Row="1"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="50" />
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding Path=RowCount}" 
+                     Grid.Column="1"
+                     TextAlignment="Center"
+                     Height="30"
+                     FontSize="20"/>
         </Grid>
+            
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">   
+            <ItemsControl ItemsSource = "{Binding Images}" 
+                    ItemTemplate="{StaticResource ImageRow}" 
+                    Grid.Row="1"
+                    ScrollViewer.CanContentScroll="False"/>
+        </ScrollViewer>
     </Grid>
 </UserControl>
