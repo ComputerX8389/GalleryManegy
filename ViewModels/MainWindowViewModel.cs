@@ -1,5 +1,6 @@
 ﻿using GalleryManegy.Handlers;
 using GalleryManegy.Models;
+using GalleryManegy.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
@@ -15,10 +17,13 @@ namespace GalleryManegy.ViewModels
     internal class MainWindowViewModel : ViewModelBase
     {
         public ImageModel ImageModel { get; set; }
-        public ICommand ChangeNameCommand => _changeDisplayNameCommand;
         public UserModel UserModel { get; private set; }
-        
-        private readonly DelegateCommand _changeDisplayNameCommand;
+        public ICommand SwitchViewCommand => _switchViewCommand;
+
+        private FrameworkElement _currentView;
+        public FrameworkElement CurrentView { get { return _currentView; } set => SetProperty(ref _currentView, value); }
+
+        private readonly DelegateCommand _switchViewCommand;
         private readonly DatabaseContext DatabaseContext;
         private readonly FileScanner FileScanner;
 
@@ -42,18 +47,34 @@ namespace GalleryManegy.ViewModels
             {
                 FileName = "Testing"
             };
-            _changeDisplayNameCommand = new DelegateCommand(OnChangeName, CanChangeName);
+            _switchViewCommand = new DelegateCommand(OnSwirchView, CanSwitch);
+
+            SwitchView("PictureSecond");
         }
 
-        private bool CanChangeName(object commandParameter)
+        public void SwitchView(string viewName)
         {
-            return ImageModel.FileName != "Walter";
+            switch (viewName)
+            {
+                case "PictureView":
+                    CurrentView = new PictureView();
+                    break;
+
+                default:
+                    CurrentView = new GalleryView();
+                    break;
+            }
         }
 
-        private void OnChangeName(object commandParameter)
+        private bool CanSwitch(object commandParameter)
         {
-            ImageModel.FileName = "Walter";
-            _changeDisplayNameCommand.InvokeCanExecuteChanged();
+            return true;
+        }
+
+        private void OnSwirchView(object commandParameter)
+        {
+            SwitchView("PictureView");
+            _switchViewCommand.InvokeCanExecuteChanged();
         }
     }
 }
