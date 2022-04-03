@@ -25,6 +25,8 @@ namespace GalleryManegy.ViewModels
             }
         }
 
+        public Action<ImageModel> PictureSelected { get; set; }
+
         private ObservableCollection<ObservableCollection<ImageModel>> _images;
         public ObservableCollection<ObservableCollection<ImageModel>> Images { get => _images; set => SetProperty(ref _images, value); }
 
@@ -45,7 +47,7 @@ namespace GalleryManegy.ViewModels
         {
             var output = new ObservableCollection<ObservableCollection<ImageModel>>();
             // Todo use loggedin user
-            var images = Context.Images.Where(i => i.User.Id == 1).ToList();
+            var images = Context.Images.Where(i => i.User.Id == 1 && i.Unsupported == false).ToList();
             var current = new ObservableCollection<ImageModel>();
 
             for (int i = 0; i < images.Count; i++)

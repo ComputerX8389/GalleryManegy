@@ -18,12 +18,11 @@ namespace GalleryManegy.ViewModels
     {
         public ImageModel ImageModel { get; set; }
         public UserModel UserModel { get; private set; }
-        public ICommand SwitchViewCommand => _switchViewCommand;
+        public ICommand SwitchViewCommand => new DelegateCommand(OnSwirchView);
 
         private FrameworkElement _currentView;
         public FrameworkElement CurrentView { get { return _currentView; } set => SetProperty(ref _currentView, value); }
 
-        private readonly DelegateCommand _switchViewCommand;
         private readonly DatabaseContext DatabaseContext;
         private readonly FileScanner FileScanner;
 
@@ -47,7 +46,6 @@ namespace GalleryManegy.ViewModels
             {
                 FileName = "Testing"
             };
-            _switchViewCommand = new DelegateCommand(OnSwirchView, CanSwitch);
 
             SwitchView("PictureSecond");
         }
@@ -66,15 +64,9 @@ namespace GalleryManegy.ViewModels
             }
         }
 
-        private bool CanSwitch(object commandParameter)
-        {
-            return true;
-        }
-
         private void OnSwirchView(object commandParameter)
         {
             SwitchView("PictureView");
-            _switchViewCommand.InvokeCanExecuteChanged();
         }
     }
 }
