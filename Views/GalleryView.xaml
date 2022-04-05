@@ -16,8 +16,15 @@
     <UserControl.Resources>
 
         <DataTemplate DataType = "{x:Type models:ImageModel}">
-                <Image Source="{Binding FullName}" 
-                   Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.RowWidth}"/>
+            <Image Source="{Binding FullName}" 
+                   Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.RowWidth}"
+                   Cursor="Hand">
+                <Image.InputBindings>
+                    <MouseBinding Gesture="LeftClick" 
+                                  Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.PictureSelectedCommand}" 
+                                  CommandParameter="{Binding}"/>
+                </Image.InputBindings>
+            </Image>
         </DataTemplate>
 
         <DataTemplate x:Key="ImageRow">
@@ -50,7 +57,7 @@
         </Grid>
             
         <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">   
-            <ItemsControl ItemsSource = "{Binding Images}" 
+            <ItemsControl ItemsSource = "{Binding ImagesInGrid}" 
                     ItemTemplate="{StaticResource ImageRow}" 
                     Grid.Row="1"
                     ScrollViewer.CanContentScroll="False"/>

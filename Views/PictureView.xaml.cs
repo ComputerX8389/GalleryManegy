@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GalleryManegy.Models;
+using GalleryManegy.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,14 @@ namespace GalleryManegy.Views
     /// </summary>
     public partial class PictureView : UserControl
     {
-        public PictureView()
+        internal PictureView()
         {
             InitializeComponent();
+
+            // Key bindings dont work if UserControl is not focused.
+            // And you cant focus it by clicking on it
+            Focusable = true;
+            Loaded += (s, e) => Keyboard.Focus(this);
         }
     }
 }

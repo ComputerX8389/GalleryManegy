@@ -30,5 +30,11 @@ namespace GalleryManegy.ViewModels
             }
             return false;
         }
+
+        protected bool SetProperty(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return true;
+        }
     }
 }

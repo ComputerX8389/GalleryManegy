@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,28 +19,21 @@ namespace GalleryManegy.ViewModels
     {
         public ImageModel ImageModel { get; set; }
         public UserModel UserModel { get; private set; }
-        public ICommand SwitchViewCommand => new DelegateCommand(OnSwirchView);
-
+        
         private FrameworkElement _currentView;
         public FrameworkElement CurrentView { get { return _currentView; } set => SetProperty(ref _currentView, value); }
 
-        private readonly DatabaseContext DatabaseContext;
+        private ObservableCollection<ImageModel> _images;
+        public ObservableCollection<ImageModel> Images { get => _images; set => SetProperty(ref _images, value); }
+
         private readonly FileScanner FileScanner;
+        private readonly DatabaseHandler DatabaseHandler;
 
         public MainWindowViewModel() : base("MainWindow")
         {
-            DatabaseContext = new();
-            // Add temp user
-            //DatabaseContext.Users.Add(new UserModel()
-            //{
-            //    FullName = "Tobias Steffensen",
-            //    Username = "steff",
-            //    Password = "123qwe123",
-            //    Created = DateTime.Now,
-            //    LastLogin = DateTime.Now,
-            //});
-            //DatabaseContext.SaveChanges();
-            UserModel = DatabaseContext.Users.FirstOrDefault(U => U.Username == "steff");
+            DatabaseHandler = new();
+            Images = new(DatabaseHandler.GetSurportedImages());
+            UserModel = DatabaseHandler.GetUser();
             //FileScanner = new(DatabaseContext, UserModel);
 
             ImageModel = new ImageModel()
@@ -47,26 +41,41 @@ namespace GalleryManegy.ViewModels
                 FileName = "Testing"
             };
 
-            SwitchView("PictureSecond");
+            SwitchView("GalleryView");
         }
 
-        public void SwitchView(string viewName)
+        public void SwitchView(string viewName, ImageModel? image = null)
         {
             switch (viewName)
             {
                 case "PictureView":
-                    CurrentView = new PictureView();
+                    if (image != null)
+                    {
+                        CurrentView = new PictureView();
+                        var pictureViewModel = (PictureViewModel)CurrentView.DataContext;
+                        pictureViewModel.CurrentImage = image;
+                        pictureViewModel.Images = Images;
+                        pictureViewModel.ExitPictureAction = OnPictureExit;
+                    }
                     break;
 
                 default:
                     CurrentView = new GalleryView();
+                    var galleryViewModel = (GalleryViewModel)CurrentView.DataContext;
+                    galleryViewModel.AllImages = Images;
+                    galleryViewModel.SelectedPicture = OnPictureSelected;
                     break;
             }
         }
 
-        private void OnSwirchView(object commandParameter)
+        private void OnPictureExit()
         {
-            SwitchView("PictureView");
+            SwitchView("GalleryView");
+        }
+
+        private void OnPictureSelected(ImageModel image)
+        {
+            SwitchView("PictureView", image);
         }
     }
 }

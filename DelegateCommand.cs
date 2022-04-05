@@ -10,9 +10,9 @@ namespace GalleryManegy
     internal class DelegateCommand : ICommand
     {
         private readonly Action<object> _executeAction;
-        private readonly Func<object, bool> _canExecuteAction;
+        private readonly Func<object, bool>? _canExecuteAction;
 
-        public DelegateCommand(Action<object> executeAction, Func<object, bool> canExecuteAction = null)
+        public DelegateCommand(Action<object> executeAction, Func<object, bool>? canExecuteAction = null)
         {
             _executeAction = executeAction;
             _canExecuteAction = canExecuteAction;

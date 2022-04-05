@@ -3,10 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:GalleryManegy.Views"
+             xmlns:local="clr-namespace:GalleryManegy.Views" 
+             xmlns:viewmodels="clr-namespace:GalleryManegy.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:PictureViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewmodels:PictureViewModel/>
+    </UserControl.DataContext>
+    
+    <UserControl.InputBindings>
+        <KeyBinding Key="Left" Command="{Binding PictureLeftCommand}"/>
+        <KeyBinding Key="Right" Command="{Binding PictureRightCommand}"/>
+    </UserControl.InputBindings>
+    
     <Grid>
-        <TextBlock>sdefgesdfg</TextBlock>
+        <Image Name="ImageBox" Source="{Binding CurrentImage.FullName}"/>
+        <Button Content="Back" 
+                Height="30" 
+                Width="50" 
+                VerticalAlignment="Top" 
+                HorizontalAlignment="Left"
+                Command="{Binding ExitPictureCommand}"/>
     </Grid>
 </UserControl>
