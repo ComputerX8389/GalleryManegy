@@ -17,7 +17,14 @@ namespace GalleryManegy.Models
         public string Username { get => _username; set => SetProperty(ref _username, value); }
 
         private string _password = "";
-        public string Password { get => _password; set => SetProperty(ref _password, value); }
+        public string Password
+        {
+            private get => _password;
+            set
+            {
+                _password = BCrypt.Net.BCrypt.HashPassword(value);
+            }
+        }
 
         private DateTime _created;
         public DateTime Created { get => _created; set => SetProperty(ref _created, value); }

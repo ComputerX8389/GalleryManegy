@@ -17,9 +17,6 @@ namespace GalleryManegy.ViewModels
 {
     internal class MainWindowViewModel : ViewModelBase
     {
-        public ImageModel ImageModel { get; set; }
-        public UserModel UserModel { get; private set; }
-        
         private FrameworkElement _currentView;
         public FrameworkElement CurrentView { get { return _currentView; } set => SetProperty(ref _currentView, value); }
 
@@ -33,49 +30,74 @@ namespace GalleryManegy.ViewModels
         {
             DatabaseHandler = new();
             Images = new(DatabaseHandler.GetSurportedImages());
-            UserModel = DatabaseHandler.GetUser();
+
             //FileScanner = new(DatabaseContext, UserModel);
 
-            ImageModel = new ImageModel()
+            if (DatabaseHandler.AnyUsers())
             {
-                FileName = "Testing"
-            };
-
-            SwitchView("GalleryView");
+                SwitchView(new LoginView());
+            }
+            else
+            {
+                SwitchView(new RegisterView());
+            }
         }
 
-        public void SwitchView(string viewName, ImageModel? image = null)
+        public void SwitchView(FrameworkElement view)
         {
-            switch (viewName)
+            switch (view)
             {
-                case "PictureView":
-                    if (image != null)
-                    {
-                        CurrentView = new PictureView();
-                        var pictureViewModel = (PictureViewModel)CurrentView.DataContext;
-                        pictureViewModel.CurrentImage = image;
-                        pictureViewModel.Images = Images;
-                        pictureViewModel.ExitPictureAction = OnPictureExit;
-                    }
-                    break;
+                case PictureView pictureView:
+                    throw new Exception("Trying to change to pictureView without a pixture");
 
-                default:
-                    CurrentView = new GalleryView();
+                case GalleryView galleryView:
+                    CurrentView = galleryView;
                     var galleryViewModel = (GalleryViewModel)CurrentView.DataContext;
                     galleryViewModel.AllImages = Images;
                     galleryViewModel.SelectedPicture = OnPictureSelected;
                     break;
+
+                case LoginView loginView:
+                    CurrentView = loginView;
+                    break;
+
+                case RegisterView registerView:
+                    CurrentView = registerView;
+                    var registerViewModel = (RegisterViewModel)CurrentView.DataContext;
+                    registerViewModel.UserRegistered = OnUserRegister;
+                    break;
+
+                default:
+                    CurrentView = new LoginView();
+                    break;
+            }
+        }
+
+        public void SwitchView(PictureView view, ImageModel image)
+        {
+            if (image != null)
+            {
+                CurrentView = view;
+                var pictureViewModel = (PictureViewModel)CurrentView.DataContext;
+                pictureViewModel.CurrentImage = image;
+                pictureViewModel.Images = Images;
+                pictureViewModel.ExitPictureAction = OnPictureExit;
             }
         }
 
         private void OnPictureExit()
         {
-            SwitchView("GalleryView");
+            SwitchView(new GalleryView());
         }
 
         private void OnPictureSelected(ImageModel image)
         {
-            SwitchView("PictureView", image);
+            SwitchView(new PictureView(), image);
+        }
+
+        private void OnUserRegister()
+        {
+            SwitchView(new LoginView());
         }
     }
 }

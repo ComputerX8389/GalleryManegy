@@ -19,7 +19,34 @@ namespace GalleryManegy.Handlers
 
         public UserModel? GetUser()
         {
-            return DatabaseContext.Users.FirstOrDefault(U => U.Username == "steff");
+            if (DatabaseContext.Users.Any())
+            {
+                return DatabaseContext.Users.FirstOrDefault(U => U.Username == "steff");
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public bool AnyUsers()
+        {
+            return DatabaseContext.Users.Any();
+        }
+
+        public bool CreateUser(UserModel user)
+        {
+            if (DatabaseContext.Users.Where(u => u.Username == user.Username).Any())
+            {
+                return false;
+            }
+            else
+            {
+                user.Created = DateTime.Now;
+                DatabaseContext.Users.Add(user);
+                DatabaseContext.SaveChanges();
+                return true;
+            }
         }
 
         public List<ImageModel> GetSurportedImages()
