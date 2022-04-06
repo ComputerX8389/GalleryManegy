@@ -14,7 +14,6 @@ namespace GalleryManegy.ViewModels
 {
     internal class GalleryViewModel : ViewModelBase
     {
-        private readonly DatabaseHandler DatabaseHandler;
         private Size CurrentSize;
 
         public ICommand PictureSelectedCommand => new DelegateCommand(PictureSelected);

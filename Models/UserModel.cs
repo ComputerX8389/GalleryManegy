@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using BCryptNet = BCrypt.Net.BCrypt;
+
 namespace GalleryManegy.Models
 {
     internal class UserModel : ModelBase
@@ -19,10 +21,10 @@ namespace GalleryManegy.Models
         private string _password = "";
         public string Password
         {
-            private get => _password;
+            get => _password;
             set
             {
-                _password = BCrypt.Net.BCrypt.HashPassword(value);
+                _password = BCryptNet.HashPassword(value);
             }
         }
 
@@ -31,5 +33,10 @@ namespace GalleryManegy.Models
 
         private DateTime _lastLogin;
         public DateTime LastLogin { get => _lastLogin; set => SetProperty(ref _lastLogin, value); }
+
+        public bool CheckPassword(string password)
+        {
+            return BCryptNet.Verify(password, Password);
+        }
     }
 }

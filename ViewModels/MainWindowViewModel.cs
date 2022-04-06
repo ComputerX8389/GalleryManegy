@@ -17,6 +17,9 @@ namespace GalleryManegy.ViewModels
 {
     internal class MainWindowViewModel : ViewModelBase
     {
+        private UserModel _currentUser;
+        public UserModel CurrentUser { get { return _currentUser; } set => SetProperty(ref _currentUser, value); }
+
         private FrameworkElement _currentView;
         public FrameworkElement CurrentView { get { return _currentView; } set => SetProperty(ref _currentView, value); }
 
@@ -59,6 +62,9 @@ namespace GalleryManegy.ViewModels
 
                 case LoginView loginView:
                     CurrentView = loginView;
+                    var loginViewModel = (LoginViewModel)CurrentView.DataContext;
+                    loginViewModel.DatabaseHandler = DatabaseHandler;
+                    loginViewModel.UserLogin = OnUserLogin;
                     break;
 
                 case RegisterView registerView:
@@ -98,6 +104,13 @@ namespace GalleryManegy.ViewModels
         private void OnUserRegister()
         {
             SwitchView(new LoginView());
+        }
+
+        private void OnUserLogin(UserModel user)
+        {
+            CurrentUser = user;
+            DatabaseHandler.User = CurrentUser;
+            SwitchView(new GalleryView());
         }
     }
 }

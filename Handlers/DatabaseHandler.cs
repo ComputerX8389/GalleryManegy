@@ -12,6 +12,8 @@ namespace GalleryManegy.Handlers
     {
         private readonly DatabaseContext DatabaseContext;
 
+        public UserModel User { get; set; }
+
         public DatabaseHandler()
         {
             DatabaseContext = new DatabaseContext();
@@ -21,7 +23,7 @@ namespace GalleryManegy.Handlers
         {
             if (DatabaseContext.Users.Any())
             {
-                return DatabaseContext.Users.FirstOrDefault(U => U.Username == "steff");
+                return DatabaseContext.Users.FirstOrDefault(U => U.Id == User.Id);
             }
             else
             {
@@ -32,6 +34,23 @@ namespace GalleryManegy.Handlers
         public bool AnyUsers()
         {
             return DatabaseContext.Users.Any();
+        }
+
+        public UserModel? Login(string Username, string Password)
+        {
+            var user = DatabaseContext.Users.FirstOrDefault(u => u.Username == Username);
+
+            if (user != null)
+            {
+                if (user.CheckPassword(Password))
+                {
+                    user.LastLogin = DateTime.Now;
+                    DatabaseContext.SaveChanges();
+                    return user;
+                }
+            }
+
+            return null;
         }
 
         public bool CreateUser(UserModel user)
