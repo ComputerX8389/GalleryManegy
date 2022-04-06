@@ -28,13 +28,12 @@ namespace GalleryManegy.ViewModels
 
         private readonly FileScanner FileScanner;
         private readonly DatabaseHandler DatabaseHandler;
+        private bool ImagesSetup;
 
         public MainWindowViewModel() : base("MainWindow")
         {
             DatabaseHandler = new();
-            Images = new(DatabaseHandler.GetSurportedImages());
-
-            //FileScanner = new(DatabaseContext, UserModel);
+            FileScanner = new(DatabaseHandler);
 
             if (DatabaseHandler.AnyUsers())
             {
@@ -43,6 +42,23 @@ namespace GalleryManegy.ViewModels
             else
             {
                 SwitchView(new RegisterView());
+            }
+        }
+
+        private void SetUpImages()
+        {
+            if (ImagesSetup == false)
+            {
+                Images = new(DatabaseHandler.GetSurportedImages());
+                ImagesSetup = true;
+
+                Debug.WriteLine("Scanner starting");
+                FileScanner.ScanAsync().ContinueWith((sender) =>
+                {
+                    Debug.WriteLine("Scanner done");
+                    // TODO bind gallerview to images properly
+                    Images = new(DatabaseHandler.GetSurportedImages());
+                });
             }
         }
 
@@ -56,6 +72,7 @@ namespace GalleryManegy.ViewModels
                 case GalleryView galleryView:
                     CurrentView = galleryView;
                     var galleryViewModel = (GalleryViewModel)CurrentView.DataContext;
+                    SetUpImages();
                     galleryViewModel.AllImages = Images;
                     galleryViewModel.SelectedPicture = OnPictureSelected;
                     break;

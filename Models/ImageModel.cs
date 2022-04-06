@@ -13,10 +13,10 @@ namespace GalleryManegy.Models
     {
         public ImageModel() { }
 
-        public ImageModel(FileInfo file, UserModel user)
+        public ImageModel(FileInfo file)
         {
             Scanned = DateTime.Now;
-            Update(file, user);
+            Update(file);
         }
 
         public int Id { get; set; }
@@ -65,7 +65,7 @@ namespace GalleryManegy.Models
             "JPG"
         };
 
-        public void Update(FileInfo file, UserModel user)
+        public void Update(FileInfo file)
         {
             FileName = file.Name;
             // DirectoryName might be null for some reason, I dont belive it
@@ -75,7 +75,6 @@ namespace GalleryManegy.Models
             Created = file.CreationTime;
             Modified = file.LastWriteTime;
             Size = file.Length;
-            User = user;
             Unsupported = IsUnsupported(file.Extension);
 
             if (Unsupported == false)

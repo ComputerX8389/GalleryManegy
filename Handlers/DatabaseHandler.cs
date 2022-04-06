@@ -68,10 +68,41 @@ namespace GalleryManegy.Handlers
             }
         }
 
+        public List<ImageModel> GetAllImages()
+        {
+            return DatabaseContext.Images.Where(i => i.User.Id == User.Id).ToList();
+        }
+
         public List<ImageModel> GetSurportedImages()
         {
-            // Todo use loggedin user
-            return DatabaseContext.Images.Where(i => i.User.Id == 1 && i.Unsupported == false).ToList();
+            return DatabaseContext.Images.Where(i => i.User.Id == User.Id && i.Unsupported == false).ToList();
+        }
+
+        public void AddImage(ImageModel imageModel)
+        {
+            imageModel.User = User;
+
+            DatabaseContext.Images.Add(imageModel);
+        }
+
+        public ImageModel? GetImageByFullName(string fullname)
+        {
+            return DatabaseContext.Images.FirstOrDefault(i => i.FullName == fullname);
+        }
+
+        public void RemoveImage(ImageModel imageModel)
+        {
+            DatabaseContext.Images.Remove(imageModel);
+        }
+
+        public void RemoveRange(List<ImageModel> imageModel)
+        {
+            DatabaseContext.Images.RemoveRange(imageModel);
+        }
+
+        public void SaveChanges()
+        {
+            DatabaseContext.SaveChanges();
         }
     }
 }

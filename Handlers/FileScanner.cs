@@ -11,45 +11,40 @@ namespace GalleryManegy.Handlers
 {
     internal class FileScanner
     {
-        private readonly DatabaseContext Dbcontext;
-        private readonly UserModel User;
-
         private readonly DirectoryInfo StartingDir = new(@"C:\Users\STEFF\Desktop\Pics");
+        private readonly DatabaseHandler DatabaseHandler;
 
-        public FileScanner(DatabaseContext context, UserModel currentUser)
+        public FileScanner(DatabaseHandler databaseHandler)
         {
-            Dbcontext = context;
-            User = currentUser;
+            DatabaseHandler = databaseHandler;
+        }
 
+        public void StartFullScan()
+        {
             Task.Run(() => ScanAsync());
         }
 
-        private async Task ScanAsync()
+        public async Task ScanAsync()
         {
             await ScanFolder(StartingDir);
             ScanForDeleted(StartingDir);
-            while (true)
-            {
-                Debug.WriteLine("lol");
-                await Task.Delay(2000);
-            }
         }
 
         private async Task ScanFolder(DirectoryInfo path)
         {
-            await Task.Delay(5000);
             var files = path.GetFiles();
             var dirs = path.GetDirectories();
 
             foreach (var file in files)
             {
                 AddImage(file);
-                // Do not strees user computer too much. Wait a bit before next pixture
+                // Do not strees user computer too much. Wait a bit before next picture
                 // Todo Get from settings
                 await Task.Delay(100);
             }
 
-            Dbcontext.SaveChanges();
+            // Bulk images together for better performance
+            DatabaseHandler.SaveChanges();
 
             foreach (var dir in dirs)
             {
@@ -60,7 +55,7 @@ namespace GalleryManegy.Handlers
         private void ScanForDeleted(DirectoryInfo path)
         {
             var imagesToDelete = new List<ImageModel>();
-            var images = Dbcontext.Images.Where(i => i.User.Id == User.Id);
+            var images = DatabaseHandler.GetAllImages();
 
             foreach (var image in images)
             {
@@ -79,23 +74,23 @@ namespace GalleryManegy.Handlers
 
             Debug.WriteLine($"Removing {imagesToDelete.Count} images");
 
-            Dbcontext.Images.RemoveRange(imagesToDelete);
-            Dbcontext.SaveChanges();
+            DatabaseHandler.RemoveRange(imagesToDelete);
+            DatabaseHandler.SaveChanges();
         }
 
         private void AddImage(FileInfo file)
         {
-            var img = Dbcontext.Images.FirstOrDefault(i => i.FullName == file.FullName);
+            var img = DatabaseHandler.GetImageByFullName(file.FullName);
 
             if (img == null)
             {
                 Debug.WriteLine($"Adding image {file.Name}");
-                Dbcontext.Images.Add(new ImageModel(file, User));
+                DatabaseHandler.AddImage(new ImageModel(file));
             }
             else
             {
                 Debug.WriteLine($"Updating image {file.Name}");
-                img.Update(file, User);
+                img.Update(file);
             }
         }
     }
