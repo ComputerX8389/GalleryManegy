@@ -2,6 +2,7 @@
 using GalleryManegy.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security;
 using System.Text;
@@ -11,10 +12,8 @@ using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
 {
-    internal class RegisterViewModel : ViewModelBase
+    internal class RegisterViewModel : ViewModelBase, IViewModel
     {
-        public Action UserRegistered { get; set; } 
-
         public ICommand RegisterCommand => RegisterCommandDelegate;
         private readonly DelegateCommand RegisterCommandDelegate;
 
@@ -60,12 +59,14 @@ namespace GalleryManegy.ViewModels
             } 
         }
 
-        private readonly DatabaseHandler DatabaseHandler;
+        public DatabaseHandler DatabaseHandler { get; set; }
+        public ObservableCollection<ImageModel> Images { get; set; }
+        public ImageModel? CurrentImage { get; set; }
+        public Action<IViewModel.Commands, object?> SendCommand { get; set; }
 
         public RegisterViewModel() : base("Register")
         {
             RegisterCommandDelegate = new DelegateCommand(Register, CanRegister);
-            DatabaseHandler = new();
         }
 
         private void Register(object sender)
@@ -82,7 +83,7 @@ namespace GalleryManegy.ViewModels
 
                 if (DatabaseHandler.CreateUser(user))
                 {
-                    UserRegistered.Invoke();
+                    SendCommand.Invoke(IViewModel.Commands.UserRegistered, null);
                 }
             }
         }

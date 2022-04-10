@@ -65,6 +65,20 @@ namespace GalleryManegy.Models
             "JPG"
         };
 
+        internal void Update(ImageModel imagedb)
+        {
+            FileName = imagedb.FileName;
+            FileLocation = imagedb.FileLocation;
+            FullName = imagedb.FullName; 
+            FileType = imagedb.FileType; 
+            Created = imagedb.Created; 
+            Modified = imagedb.Modified; 
+            Size = imagedb.Size; 
+            Unsupported = imagedb.Unsupported;
+            Width = imagedb.Width;
+            Height = imagedb.Height; 
+        }
+
         public void Update(FileInfo file)
         {
             FileName = file.Name;
@@ -96,6 +110,11 @@ namespace GalleryManegy.Models
                 }
             }
             return true;
+        }
+
+        public override string ToString()
+        {
+            return FileName;
         }
     }
 }

@@ -11,11 +11,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
 {
-    internal class MainWindowViewModel : ViewModelBase
+    internal class MainWindowViewModel : ViewModelBase, IViewModel
     {
         private UserModel _currentUser;
         public UserModel CurrentUser { get { return _currentUser; } set => SetProperty(ref _currentUser, value); }
@@ -26,9 +27,11 @@ namespace GalleryManegy.ViewModels
         private ObservableCollection<ImageModel> _images;
         public ObservableCollection<ImageModel> Images { get => _images; set => SetProperty(ref _images, value); }
 
+        public DatabaseHandler DatabaseHandler { get; set; }
+        public ImageModel? CurrentImage { get; set; }
+        public Action<IViewModel.Commands, object?> SendCommand { get; set; }
+
         private readonly FileScanner FileScanner;
-        private readonly DatabaseHandler DatabaseHandler;
-        private bool ImagesSetup;
 
         public MainWindowViewModel() : base("MainWindow")
         {
@@ -47,87 +50,70 @@ namespace GalleryManegy.ViewModels
 
         private void SetUpImages()
         {
-            if (ImagesSetup == false)
-            {
-                Images = new(DatabaseHandler.GetSurportedImages());
-                ImagesSetup = true;
+            Images = new(DatabaseHandler.GetSurportedImages());
+        }
 
-                Debug.WriteLine("Scanner starting");
-                FileScanner.ScanAsync().ContinueWith((sender) =>
-                {
-                    Debug.WriteLine("Scanner done");
-                    // TODO bind gallerview to images properly
-                    Images = new(DatabaseHandler.GetSurportedImages());
-                });
+        private void ScanForImages()
+        {
+            Debug.WriteLine("Scanner starting");
+            FileScanner.ScanAsync().ContinueWith((sender) =>
+            {
+                Debug.WriteLine("Scanner done");
+                // TODO bind gallerview to images properly
+                DatabaseHandler.UpdateImageListToMatchDatabase(Images);
+            });
+        }
+
+        public void SwitchView(FrameworkElement view, ImageModel? image = null)
+        {
+            CurrentView = view;
+            if (CurrentView.DataContext is IViewModel viewModel)
+            {
+                viewModel.DatabaseHandler = DatabaseHandler;
+                viewModel.Images = Images;
+                viewModel.CurrentImage = image;
+                viewModel.SendCommand = RunCommand;
+            }
+            else
+            {
+                Debug.WriteLine($"Cant set dependecies on {view}. cant convert DataContext to IViewModel");
             }
         }
 
-        public void SwitchView(FrameworkElement view)
+        private void RunCommand(IViewModel.Commands command, object? data)
         {
-            switch (view)
+            switch (command)
             {
-                case PictureView pictureView:
-                    throw new Exception("Trying to change to pictureView without a pixture");
-
-                case GalleryView galleryView:
-                    CurrentView = galleryView;
-                    var galleryViewModel = (GalleryViewModel)CurrentView.DataContext;
-                    SetUpImages();
-                    galleryViewModel.AllImages = Images;
-                    galleryViewModel.SelectedPicture = OnPictureSelected;
+                case IViewModel.Commands.SelectedImage:
+                    if (data is ImageModel image)
+                    {
+                        SwitchView(new PictureView(), image);
+                    }
+                    else
+                    {
+                        throw new Exception("Trying to switch to picture view without a image");
+                    }
                     break;
-
-                case LoginView loginView:
-                    CurrentView = loginView;
-                    var loginViewModel = (LoginViewModel)CurrentView.DataContext;
-                    loginViewModel.DatabaseHandler = DatabaseHandler;
-                    loginViewModel.UserLogin = OnUserLogin;
+                case IViewModel.Commands.SelectedGallery:
+                    SwitchView(new GalleryView());
                     break;
-
-                case RegisterView registerView:
-                    CurrentView = registerView;
-                    var registerViewModel = (RegisterViewModel)CurrentView.DataContext;
-                    registerViewModel.UserRegistered = OnUserRegister;
+                case IViewModel.Commands.UserLogin:
+                    if (data is UserModel user)
+                    {
+                        CurrentUser = user;
+                        DatabaseHandler.User = CurrentUser;
+                        SetUpImages();
+                        SwitchView(new GalleryView());
+                        ScanForImages();
+                    }
                     break;
-
-                default:
-                    CurrentView = new LoginView();
+                case IViewModel.Commands.UserRegistered:
+                    SwitchView(new LoginView());
+                    break;
+                case IViewModel.Commands.StartScan:
+                    ScanForImages();
                     break;
             }
-        }
-
-        public void SwitchView(PictureView view, ImageModel image)
-        {
-            if (image != null)
-            {
-                CurrentView = view;
-                var pictureViewModel = (PictureViewModel)CurrentView.DataContext;
-                pictureViewModel.CurrentImage = image;
-                pictureViewModel.Images = Images;
-                pictureViewModel.ExitPictureAction = OnPictureExit;
-            }
-        }
-
-        private void OnPictureExit()
-        {
-            SwitchView(new GalleryView());
-        }
-
-        private void OnPictureSelected(ImageModel image)
-        {
-            SwitchView(new PictureView(), image);
-        }
-
-        private void OnUserRegister()
-        {
-            SwitchView(new LoginView());
-        }
-
-        private void OnUserLogin(UserModel user)
-        {
-            CurrentUser = user;
-            DatabaseHandler.User = CurrentUser;
-            SwitchView(new GalleryView());
         }
     }
 }

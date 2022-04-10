@@ -11,10 +11,10 @@ using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
 {
-    internal class PictureViewModel : ViewModelBase
+    internal class PictureViewModel : ViewModelBase, IViewModel
     {
-        private ImageModel _currentImage;
-        public ImageModel CurrentImage { get => _currentImage; set => SetProperty(ref _currentImage, value); }
+        private ImageModel? _currentImage;
+        public ImageModel? CurrentImage { get => _currentImage; set => SetProperty(ref _currentImage, value); }
 
         private ObservableCollection<ImageModel> _images;
         public ObservableCollection<ImageModel> Images { get => _images; set => SetProperty(ref _images, value); }
@@ -22,17 +22,22 @@ namespace GalleryManegy.ViewModels
         public ICommand ExitPictureCommand => new DelegateCommand(ExitPicture);
         public ICommand PictureRightCommand => new DelegateCommand(PictureRight);
         public ICommand PictureLeftCommand => new DelegateCommand(PictureLeft);
-        public Action ExitPictureAction { get; set; }
+
+        public DatabaseHandler DatabaseHandler { get; set; }
+        public Action<IViewModel.Commands, object?> SendCommand { get; set; }
 
         public PictureViewModel() : base("Picture") { }
 
         private void ExitPicture(object sender)
         {
-            ExitPictureAction.Invoke();
+            SendCommand.Invoke(IViewModel.Commands.SelectedGallery, null);
         }
 
         private void PictureRight(object sender)
         {
+            if (CurrentImage == null)
+                return;
+            
             var index = Images.IndexOf(CurrentImage) + 1;
 
             if (index < Images.Count)
@@ -43,6 +48,9 @@ namespace GalleryManegy.ViewModels
 
         private void PictureLeft(object sender)
         {
+            if (CurrentImage == null)
+                return;
+
             var index = Images.IndexOf(CurrentImage) - 1;
 
             if (index >= 0)

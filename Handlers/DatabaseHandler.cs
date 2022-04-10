@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,6 +66,39 @@ namespace GalleryManegy.Handlers
                 DatabaseContext.Users.Add(user);
                 DatabaseContext.SaveChanges();
                 return true;
+            }
+        }
+
+        public void UpdateImageListToMatchDatabase(ObservableCollection<ImageModel> List)
+        {
+            var allImagesDb = GetSurportedImages();
+            foreach (var imagedb in allImagesDb)
+            {
+                var imgList = List.FirstOrDefault(i => i.Id == imagedb.Id);
+
+                if (imgList != null)
+                {
+                    imgList.Update(imagedb);
+                }
+                else
+                {
+                    List.Add(imagedb);
+                }
+            }
+
+            List<ImageModel> toRemove = new();
+
+            foreach (var imageList in List)
+            {
+                if (!allImagesDb.Where(i => i.Id == imageList.Id).Any())
+                {
+                    toRemove.Add(imageList);
+                }
+            }
+
+            foreach (var image in toRemove)
+            {
+                List.Remove(image);
             }
         }
 

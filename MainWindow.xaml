@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:GalleryManegy" 
         xmlns:viewmodels="clr-namespace:GalleryManegy.ViewModels"
         xmlns:view="clr-namespace:GalleryManegy.Views"
+        xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -16,6 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
         <ContentControl Content="{Binding CurrentView}" Grid.Row="1" />
     </Grid>
 </Window>

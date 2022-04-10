@@ -2,6 +2,7 @@
 using GalleryManegy.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,10 +11,8 @@ using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
 {
-    internal class LoginViewModel : ViewModelBase
+    internal class LoginViewModel : ViewModelBase, IViewModel
     {
-        public Action<UserModel> UserLogin{ get; set; }
-
         public ICommand LoginCommand => new DelegateCommand(Login);
 
         public DatabaseHandler DatabaseHandler { get; set; }
@@ -31,6 +30,9 @@ namespace GalleryManegy.ViewModels
             get => _password;
             set => SetProperty(ref _password, value);
         }
+        public ObservableCollection<ImageModel> Images { get; set; }
+        public ImageModel? CurrentImage { get; set; }
+        public Action<IViewModel.Commands, object?> SendCommand { get; set; }
 
         public LoginViewModel() : base("Login")
         {
@@ -43,7 +45,7 @@ namespace GalleryManegy.ViewModels
 
             if (user != null)
             {
-                UserLogin.Invoke(user);
+                SendCommand.Invoke(IViewModel.Commands.UserLogin, user);
             }
             else
             {

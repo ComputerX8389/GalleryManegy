@@ -1,5 +1,8 @@
-﻿using System;
+﻿using GalleryManegy.Handlers;
+using GalleryManegy.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -14,12 +17,13 @@ namespace GalleryManegy.ViewModels
         public string _fileName;
         public string FileName { get { return _fileName; } set => SetProperty(ref _fileName, value); }
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public ViewModelBase(string filename)
         {
             FileName = filename;
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
         protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))
