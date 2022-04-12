@@ -13,6 +13,14 @@
     <Window.DataContext>
         <viewmodels:MainWindowViewModel/>
     </Window.DataContext>
+
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Red" />
+        </Style>
+    </Window.Resources>
+
+    <!--<Grid Background="#2D2D2D">-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />

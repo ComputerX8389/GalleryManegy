@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,8 +15,10 @@ using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
 {
-    internal class MainWindowViewModel : ViewModelBase, IViewModel
+    internal class MainWindowViewModel : ViewModelBase
     {
+        private readonly DatabaseHandler DatabaseHandler;
+
         private UserModel _currentUser;
         public UserModel CurrentUser { get { return _currentUser; } set => SetProperty(ref _currentUser, value); }
 
@@ -26,10 +27,6 @@ namespace GalleryManegy.ViewModels
 
         private ObservableCollection<ImageModel> _images;
         public ObservableCollection<ImageModel> Images { get => _images; set => SetProperty(ref _images, value); }
-
-        public DatabaseHandler DatabaseHandler { get; set; }
-        public ImageModel? CurrentImage { get; set; }
-        public Action<IViewModel.Commands, object?> SendCommand { get; set; }
 
         private readonly FileScanner FileScanner;
 
@@ -69,9 +66,7 @@ namespace GalleryManegy.ViewModels
             CurrentView = view;
             if (CurrentView.DataContext is IViewModel viewModel)
             {
-                viewModel.DatabaseHandler = DatabaseHandler;
-                viewModel.Images = Images;
-                viewModel.CurrentImage = image;
+                viewModel.SetDependencies(DatabaseHandler, Images, image);
                 viewModel.SendCommand = RunCommand;
             }
             else
@@ -94,9 +89,11 @@ namespace GalleryManegy.ViewModels
                         throw new Exception("Trying to switch to picture view without a image");
                     }
                     break;
+
                 case IViewModel.Commands.SelectedGallery:
                     SwitchView(new GalleryView());
                     break;
+
                 case IViewModel.Commands.UserLogin:
                     if (data is UserModel user)
                     {
@@ -107,9 +104,15 @@ namespace GalleryManegy.ViewModels
                         ScanForImages();
                     }
                     break;
+
+                case IViewModel.Commands.SelectedSettings:
+                    SwitchView(new SettingsView());
+                    break;
+
                 case IViewModel.Commands.UserRegistered:
                     SwitchView(new LoginView());
                     break;
+
                 case IViewModel.Commands.StartScan:
                     ScanForImages();
                     break;

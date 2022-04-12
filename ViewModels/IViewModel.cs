@@ -11,15 +11,15 @@ namespace GalleryManegy.ViewModels
 {
     internal interface IViewModel
     {
-        public DatabaseHandler DatabaseHandler { get; set; }
-        public ObservableCollection<ImageModel> Images { get; set; }
-        public ImageModel? CurrentImage { get; set; }
+        public void SetDependencies(DatabaseHandler DatabaseHandler, ObservableCollection<ImageModel> Images, ImageModel? CurrentImage);
+
         public Action<Commands, object?> SendCommand { get; set; }
 
         public enum Commands
         {
             SelectedImage,
             SelectedGallery,
+            SelectedSettings,
             UserLogin,
             UserRegistered,
             StartScan

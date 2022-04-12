@@ -49,6 +49,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="50" />
             </Grid.ColumnDefinitions>
 
             <Image Source="/Images/SearchFolder.png" 
@@ -65,6 +66,16 @@
                      TextAlignment="Center"
                      Height="30"
                      FontSize="20"/>
+
+
+            <Image Source="/Images/Gear.png" 
+                   Grid.Column="3"
+                   Cursor="Hand">
+                <Image.InputBindings>
+                    <MouseBinding Gesture="LeftClick" 
+                                  Command="{Binding OpenSettingsCommand}"/>
+                </Image.InputBindings>
+            </Image>
         </Grid>
             
         <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">   

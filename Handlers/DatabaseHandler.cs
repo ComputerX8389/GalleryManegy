@@ -12,12 +12,34 @@ namespace GalleryManegy.Handlers
     internal class DatabaseHandler
     {
         private readonly DatabaseContext DatabaseContext;
+        private readonly Dictionary<SettingModel.SettingKeys, string> DefaultSettings;
 
         public UserModel User { get; set; }
 
         public DatabaseHandler()
         {
-            DatabaseContext = new DatabaseContext();
+            DatabaseContext = new();
+            DefaultSettings = new();
+            DefaultSettings.Add(SettingModel.SettingKeys.GalleryPath, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
+            DefaultSettings.Add(SettingModel.SettingKeys.GalleryRowAmount, "6");
+        }
+
+        #region General
+        public SettingModel GetSetting(SettingModel.SettingKeys key)
+        {
+            var setting = DatabaseContext.Settings.FirstOrDefault(s => s.Key == key);
+
+            if (setting != null)
+            {
+                return setting;
+            }
+            else
+            {
+                setting = new SettingModel(key, DefaultSettings[key], User);
+                DatabaseContext.Settings.Add(setting);
+                SaveChanges();
+                return setting;
+            }
         }
 
         public UserModel? GetUser()
@@ -102,6 +124,13 @@ namespace GalleryManegy.Handlers
             }
         }
 
+        public void SaveChanges()
+        {
+            DatabaseContext.SaveChanges();
+        }
+        #endregion
+
+        #region Images
         public List<ImageModel> GetAllImages()
         {
             return DatabaseContext.Images.Where(i => i.User.Id == User.Id).ToList();
@@ -133,10 +162,6 @@ namespace GalleryManegy.Handlers
         {
             DatabaseContext.Images.RemoveRange(imageModel);
         }
-
-        public void SaveChanges()
-        {
-            DatabaseContext.SaveChanges();
-        }
+        #endregion
     }
 }

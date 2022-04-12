@@ -23,10 +23,15 @@ namespace GalleryManegy.ViewModels
         public ICommand PictureRightCommand => new DelegateCommand(PictureRight);
         public ICommand PictureLeftCommand => new DelegateCommand(PictureLeft);
 
-        public DatabaseHandler DatabaseHandler { get; set; }
         public Action<IViewModel.Commands, object?> SendCommand { get; set; }
 
         public PictureViewModel() : base("Picture") { }
+
+        public void SetDependencies(DatabaseHandler databaseHandler, ObservableCollection<ImageModel> images, ImageModel? currentImage)
+        {
+            CurrentImage = currentImage;
+            Images = images;
+        }
 
         private void ExitPicture(object sender)
         {

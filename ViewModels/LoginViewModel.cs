@@ -13,9 +13,9 @@ namespace GalleryManegy.ViewModels
 {
     internal class LoginViewModel : ViewModelBase, IViewModel
     {
-        public ICommand LoginCommand => new DelegateCommand(Login);
+        private DatabaseHandler DatabaseHandler;
 
-        public DatabaseHandler DatabaseHandler { get; set; }
+        public ICommand LoginCommand => new DelegateCommand(Login);
 
         private string _username = "";
         public string Username
@@ -51,6 +51,11 @@ namespace GalleryManegy.ViewModels
             {
                 MessageBox.Show("Wrong username or password");
             }
+        }
+
+        public void SetDependencies(DatabaseHandler databaseHandler, ObservableCollection<ImageModel> images, ImageModel? currentImage)
+        {
+            DatabaseHandler = databaseHandler;
         }
     }
 }

@@ -12,6 +12,7 @@ namespace GalleryManegy
     {
         public DbSet<ImageModel> Images { get; set; }
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<SettingModel> Settings { get; set; }
 
         public DatabaseContext()
         {

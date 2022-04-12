@@ -14,6 +14,8 @@ namespace GalleryManegy.ViewModels
 {
     internal class RegisterViewModel : ViewModelBase, IViewModel
     {
+        private DatabaseHandler DatabaseHandler;
+
         public ICommand RegisterCommand => RegisterCommandDelegate;
         private readonly DelegateCommand RegisterCommandDelegate;
 
@@ -59,14 +61,16 @@ namespace GalleryManegy.ViewModels
             } 
         }
 
-        public DatabaseHandler DatabaseHandler { get; set; }
-        public ObservableCollection<ImageModel> Images { get; set; }
-        public ImageModel? CurrentImage { get; set; }
         public Action<IViewModel.Commands, object?> SendCommand { get; set; }
 
         public RegisterViewModel() : base("Register")
         {
             RegisterCommandDelegate = new DelegateCommand(Register, CanRegister);
+        }
+
+        public void SetDependencies(DatabaseHandler databaseHandler, ObservableCollection<ImageModel> images, ImageModel? currentImage)
+        {
+            DatabaseHandler = databaseHandler;
         }
 
         private void Register(object sender)

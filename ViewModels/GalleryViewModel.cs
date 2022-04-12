@@ -1,4 +1,5 @@
-﻿using GalleryManegy.Handlers;
+﻿using GalleryManegy;
+using GalleryManegy.Handlers;
 using GalleryManegy.Models;
 using System;
 using System.Collections.Generic;
@@ -15,16 +16,40 @@ namespace GalleryManegy.ViewModels
     internal class GalleryViewModel : ViewModelBase, IViewModel
     {
         private Size CurrentSize;
+        private DatabaseHandler DatabaseHandler;
 
         public ICommand PictureSelectedCommand => new DelegateCommand(PictureSelected);
         public ICommand StartScanCommand => new DelegateCommand(OnStartScan);
+        public ICommand OpenSettingsCommand => new DelegateCommand(OpenSettings);
 
-        private double _rowCount;
-        public double RowCount { get { return _rowCount; } set
+        private SettingModel? _rowSetting;
+        public int RowCount 
+        { 
+            get 
             {
-                SetProperty(ref _rowCount, value);
-                OnChangeSize(CurrentSize);
+                if (_rowSetting != null)
+                {
+                    return _rowSetting.ValueAsInt;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            set
+            {
+                if (_rowSetting != null)
+                {
+                    _rowSetting.ValueAsInt = value;
+                    DatabaseHandler.SaveChanges();
+                }
+                else
+                {
+                    Debug.WriteLine($"Cant save settting row setting");
+                }
+                SetProperty(nameof(RowCount));
                 SetProperty(nameof(ImagesInGrid));
+                OnChangeSize(CurrentSize);
             }
         }
 
@@ -53,17 +78,11 @@ namespace GalleryManegy.ViewModels
 
                 return output;
             }
-            set
-            {
-
-            }
+            set { }
         }
 
         private double _rowWidth;
         public double RowWidth { get { return _rowWidth; } set => SetProperty(ref _rowWidth, value); }
-
-        public DatabaseHandler DatabaseHandler { get; set; }
-        public ImageModel CurrentImage { get; set; }
 
         private ObservableCollection<ImageModel> _images;
         public ObservableCollection<ImageModel> Images
@@ -82,8 +101,16 @@ namespace GalleryManegy.ViewModels
         public GalleryViewModel() : base("Gallery")
         {
             RowWidth = 100;
-            _rowCount = 4;
             _images = new();
+        }
+
+        public void SetDependencies(DatabaseHandler databaseHandler, ObservableCollection<ImageModel> images, ImageModel? currentImage)
+        {
+            DatabaseHandler = databaseHandler;
+            Images = images;
+            
+            _rowSetting = DatabaseHandler.GetSetting(SettingModel.SettingKeys.GalleryRowAmount);
+            RowCount = _rowSetting.ValueAsInt;
         }
 
         public void OnChangeSize(Size newSize)
@@ -97,13 +124,17 @@ namespace GalleryManegy.ViewModels
         {
             var image = (ImageModel)command;
             Debug.WriteLine("Picture selected: " + image.FileName);
-            CurrentImage = image;
             SendCommand.Invoke(IViewModel.Commands.SelectedImage, image);
         }
 
         private void OnStartScan(object sender)
         {
             SendCommand.Invoke(IViewModel.Commands.StartScan, null);
+        }
+
+        private void OpenSettings(object commandParameter)
+        {
+            SendCommand.Invoke(IViewModel.Commands.SelectedSettings, null);
         }
     }
 }
