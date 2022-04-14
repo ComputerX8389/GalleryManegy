@@ -53,7 +53,8 @@ namespace GalleryManegy.ViewModels
         private void ScanForImages()
         {
             Debug.WriteLine("Scanner starting");
-            FileScanner.ScanAsync().ContinueWith((sender) =>
+            var path = DatabaseHandler.GetSetting(SettingModel.SettingKeys.GalleryPath);
+            FileScanner.ScanAsync(new(path.Value)).ContinueWith((sender) =>
             {
                 Debug.WriteLine("Scanner done");
                 // TODO bind gallerview to images properly

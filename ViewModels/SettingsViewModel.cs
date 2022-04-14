@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
@@ -33,12 +34,18 @@ namespace GalleryManegy.ViewModels
         private void SaveAndExit(object sender)
         {
             DatabaseHandler.SaveChanges();
-            //SendCommand.Invoke(IViewModel.Commands.SelectedGallery, null);
+            SendCommand.Invoke(IViewModel.Commands.SelectedGallery, null);
         }
 
         private void OpenFolderDialog(object sender)
         {
-
+            var dialog = new FolderBrowserDialog();
+            DialogResult result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                var path = dialog.SelectedPath;
+                GalleryPath.Value = path;
+            }
         }
     }
 }

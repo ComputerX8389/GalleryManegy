@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,9 @@ namespace GalleryManegy
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=GalleryManegy;Integrated Security=True;");
+            //var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            //var filepath = Path.Combine(path, "GalleryManegy", "database.sql");
+            //optionsBuilder.UseSqlite("Data Source=GalleryManegy.db");
         }
     }
 }

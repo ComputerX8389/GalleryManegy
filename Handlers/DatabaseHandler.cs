@@ -22,6 +22,8 @@ namespace GalleryManegy.Handlers
             DefaultSettings = new();
             DefaultSettings.Add(SettingModel.SettingKeys.GalleryPath, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
             DefaultSettings.Add(SettingModel.SettingKeys.GalleryRowAmount, "6");
+
+            DatabaseContext.Database.Migrate();
         }
 
         #region General

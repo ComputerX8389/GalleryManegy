@@ -116,7 +116,7 @@ namespace GalleryManegy.ViewModels
         public void OnChangeSize(Size newSize)
         {
             // - 5 to acount for scroolbar
-            RowWidth = newSize.Width / RowCount - 5;
+            RowWidth = newSize.Width / RowCount;
             CurrentSize = newSize;
         }
 

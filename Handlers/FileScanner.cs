@@ -11,7 +11,6 @@ namespace GalleryManegy.Handlers
 {
     internal class FileScanner
     {
-        private readonly DirectoryInfo StartingDir = new(@"C:\Users\STEFF\Desktop\Pics");
         private readonly DatabaseHandler DatabaseHandler;
 
         private bool Scanning;
@@ -21,26 +20,14 @@ namespace GalleryManegy.Handlers
             DatabaseHandler = databaseHandler;
         }
 
-        public void StartFullScan()
+        public async Task ScanAsync(DirectoryInfo Directory)
         {
+            // Dont scan if already scanning
             if (Scanning == false)
             {
                 Scanning = true;
-                Task.Run(() => ScanAsync());
-            }
-            else
-            {
-                Debug.WriteLine("Scan already running");
-            }
-        }
-
-        public async Task ScanAsync()
-        {
-            if (Scanning == false)
-            {
-                Scanning = true;
-                await ScanFolder(StartingDir);
-                ScanForDeleted(StartingDir);
+                await ScanFolder(Directory);
+                ScanForDeleted(Directory);
                 Scanning = false;
             }
             else
