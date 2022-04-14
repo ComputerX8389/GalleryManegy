@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:GalleryManegy.Views"
              xmlns:viewmodels="clr-namespace:GalleryManegy.ViewModels"
              xmlns:models="clr-namespace:GalleryManegy.Models"
+             xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" 
              SizeChanged="UserControl_SizeChanged">
@@ -14,7 +15,8 @@
     </UserControl.DataContext>
 
     <UserControl.Resources>
-
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        
         <DataTemplate DataType = "{x:Type models:ImageModel}">
             <Image Source="{Binding FullName}" 
                    Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.RowWidth}"
@@ -52,13 +54,19 @@
                 <ColumnDefinition Width="50" />
             </Grid.ColumnDefinitions>
 
-            <Image Source="/Images/SearchFolder.png" 
-                   Grid.Column="2"
+            <Image Grid.Column="2"
+                   Source="/Images/SearchFolder.png"
                    Cursor="Hand">
                 <Image.InputBindings>
                     <MouseBinding Gesture="LeftClick" 
                                   Command="{Binding StartScanCommand}"/>
                 </Image.InputBindings>
+            </Image>
+
+            <Image Grid.Column="2"
+                   gif:AnimationBehavior.SourceUri="/Images/loading.gif"
+                   Visibility="{Binding Path=Scanning, Converter={StaticResource BoolToVis}}"
+                   Cursor="Wait">
             </Image>
 
             <TextBox Text="{Binding Path=RowCount, UpdateSourceTrigger=PropertyChanged}" 

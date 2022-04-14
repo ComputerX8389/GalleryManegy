@@ -11,7 +11,7 @@ namespace GalleryManegy.ViewModels
 {
     internal interface IViewModel
     {
-        public void SetDependencies(DatabaseHandler DatabaseHandler, ObservableCollection<ImageModel> Images, ImageModel? CurrentImage);
+        public void SetDependencies(DatabaseHandler DatabaseHandler, ImageModel? CurrentImage);
 
         public Action<Commands, object?> SendCommand { get; set; }
 
@@ -22,7 +22,6 @@ namespace GalleryManegy.ViewModels
             SelectedSettings,
             UserLogin,
             UserRegistered,
-            StartScan
         }
     }
 }

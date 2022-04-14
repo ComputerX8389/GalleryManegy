@@ -16,11 +16,15 @@ namespace GalleryManegy.ViewModels
     internal class GalleryViewModel : ViewModelBase, IViewModel
     {
         private Size CurrentSize;
-        private DatabaseHandler DatabaseHandler;
+        private DatabaseHandler? DatabaseHandler;
+        private FileScanner? FileScanner;
 
         public ICommand PictureSelectedCommand => new DelegateCommand(PictureSelected);
         public ICommand StartScanCommand => new DelegateCommand(OnStartScan);
         public ICommand OpenSettingsCommand => new DelegateCommand(OpenSettings);
+
+        private bool _scanning;
+        public bool Scanning { get => _scanning; set => SetProperty(ref _scanning, value); }
 
         private SettingModel? _rowSetting;
         public int RowCount 
@@ -104,13 +108,15 @@ namespace GalleryManegy.ViewModels
             _images = new();
         }
 
-        public void SetDependencies(DatabaseHandler databaseHandler, ObservableCollection<ImageModel> images, ImageModel? currentImage)
+        public void SetDependencies(DatabaseHandler databaseHandler, ImageModel? currentImage)
         {
             DatabaseHandler = databaseHandler;
-            Images = images;
+            FileScanner = new(DatabaseHandler);
             
             _rowSetting = DatabaseHandler.GetSetting(SettingModel.SettingKeys.GalleryRowAmount);
             RowCount = _rowSetting.ValueAsInt;
+            Images = new(DatabaseHandler.GetSurportedImages());
+            ScanForImages();
         }
 
         public void OnChangeSize(Size newSize)
@@ -129,7 +135,21 @@ namespace GalleryManegy.ViewModels
 
         private void OnStartScan(object sender)
         {
-            SendCommand.Invoke(IViewModel.Commands.StartScan, null);
+            //SendCommand.Invoke(IViewModel.Commands.StartScan, null);
+            ScanForImages();
+        }
+
+        private void ScanForImages()
+        {
+            if (FileScanner != null && DatabaseHandler != null)
+            {
+                Scanning = true;
+                FileScanner.ScanAsync().ContinueWith((sender) =>
+                {
+                    Scanning = false;
+                    Images = new(DatabaseHandler.GetSurportedImages());
+                });
+            }
         }
 
         private void OpenSettings(object commandParameter)

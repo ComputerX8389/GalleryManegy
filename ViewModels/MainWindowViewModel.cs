@@ -25,15 +25,9 @@ namespace GalleryManegy.ViewModels
         private FrameworkElement _currentView;
         public FrameworkElement CurrentView { get { return _currentView; } set => SetProperty(ref _currentView, value); }
 
-        private ObservableCollection<ImageModel> _images;
-        public ObservableCollection<ImageModel> Images { get => _images; set => SetProperty(ref _images, value); }
-
-        private readonly FileScanner FileScanner;
-
         public MainWindowViewModel() : base("MainWindow")
         {
             DatabaseHandler = new();
-            FileScanner = new(DatabaseHandler);
 
             if (DatabaseHandler.AnyUsers())
             {
@@ -45,29 +39,12 @@ namespace GalleryManegy.ViewModels
             }
         }
 
-        private void SetUpImages()
-        {
-            Images = new(DatabaseHandler.GetSurportedImages());
-        }
-
-        private void ScanForImages()
-        {
-            Debug.WriteLine("Scanner starting");
-            var path = DatabaseHandler.GetSetting(SettingModel.SettingKeys.GalleryPath);
-            FileScanner.ScanAsync(new(path.Value)).ContinueWith((sender) =>
-            {
-                Debug.WriteLine("Scanner done");
-                // TODO bind gallerview to images properly
-                DatabaseHandler.UpdateImageListToMatchDatabase(Images);
-            });
-        }
-
         public void SwitchView(FrameworkElement view, ImageModel? image = null)
         {
             CurrentView = view;
             if (CurrentView.DataContext is IViewModel viewModel)
             {
-                viewModel.SetDependencies(DatabaseHandler, Images, image);
+                viewModel.SetDependencies(DatabaseHandler, image);
                 viewModel.SendCommand = RunCommand;
             }
             else
@@ -100,9 +77,7 @@ namespace GalleryManegy.ViewModels
                     {
                         CurrentUser = user;
                         DatabaseHandler.User = CurrentUser;
-                        SetUpImages();
                         SwitchView(new GalleryView());
-                        ScanForImages();
                     }
                     break;
 
@@ -112,10 +87,6 @@ namespace GalleryManegy.ViewModels
 
                 case IViewModel.Commands.UserRegistered:
                     SwitchView(new LoginView());
-                    break;
-
-                case IViewModel.Commands.StartScan:
-                    ScanForImages();
                     break;
             }
         }

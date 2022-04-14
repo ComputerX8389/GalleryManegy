@@ -53,7 +53,7 @@ namespace GalleryManegy.ViewModels
             }
         }
 
-        public void SetDependencies(DatabaseHandler databaseHandler, ObservableCollection<ImageModel> images, ImageModel? currentImage)
+        public void SetDependencies(DatabaseHandler databaseHandler, ImageModel? currentImage)
         {
             DatabaseHandler = databaseHandler;
         }

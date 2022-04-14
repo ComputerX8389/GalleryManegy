@@ -20,14 +20,16 @@ namespace GalleryManegy.Handlers
             DatabaseHandler = databaseHandler;
         }
 
-        public async Task ScanAsync(DirectoryInfo Directory)
+        public async Task ScanAsync()
         {
+            var path = DatabaseHandler.GetSetting(SettingModel.SettingKeys.GalleryPath);
+            var directory = new DirectoryInfo(path.Value);
             // Dont scan if already scanning
             if (Scanning == false)
             {
                 Scanning = true;
-                await ScanFolder(Directory);
-                ScanForDeleted(Directory);
+                await ScanFolder(directory);
+                ScanForDeleted(directory);
                 Scanning = false;
             }
             else

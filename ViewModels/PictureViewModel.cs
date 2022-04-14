@@ -27,10 +27,10 @@ namespace GalleryManegy.ViewModels
 
         public PictureViewModel() : base("Picture") { }
 
-        public void SetDependencies(DatabaseHandler databaseHandler, ObservableCollection<ImageModel> images, ImageModel? currentImage)
+        public void SetDependencies(DatabaseHandler databaseHandler, ImageModel? currentImage)
         {
             CurrentImage = currentImage;
-            Images = images;
+            Images = new(databaseHandler.GetSurportedImages());
         }
 
         private void ExitPicture(object sender)

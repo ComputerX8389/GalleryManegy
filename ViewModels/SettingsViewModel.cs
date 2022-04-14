@@ -25,7 +25,7 @@ namespace GalleryManegy.ViewModels
 
         public SettingsViewModel() : base("Settings") { }
 
-        public void SetDependencies(DatabaseHandler databaseHandler, ObservableCollection<ImageModel> images, ImageModel? currentImage)
+        public void SetDependencies(DatabaseHandler databaseHandler, ImageModel? currentImage)
         {
             DatabaseHandler = databaseHandler;
             GalleryPath = DatabaseHandler.GetSetting(SettingModel.SettingKeys.GalleryPath);

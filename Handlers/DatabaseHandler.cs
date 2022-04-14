@@ -143,6 +143,11 @@ namespace GalleryManegy.Handlers
             return DatabaseContext.Images.Where(i => i.User.Id == User.Id && i.Unsupported == false).ToList();
         }
 
+        public void GetAlbums()
+        {
+            var result = DatabaseContext.Images.Select(i => i.FileLocation).Distinct().ToList();
+        }
+
         public void AddImage(ImageModel imageModel)
         {
             imageModel.User = User;
