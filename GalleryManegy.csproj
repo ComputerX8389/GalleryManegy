@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\AlbumMode.png" />
+    <None Remove="Images\GalleryMode.png" />
     <None Remove="Images\Gear.png" />
     <None Remove="Images\Loading.gif" />
     <None Remove="Images\SearchFolder.png" />
@@ -26,9 +28,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\AlbumMode.png" />
+    <Resource Include="Images\GalleryMode.png" />
     <Resource Include="Images\Gear.png" />
     <Resource Include="Images\Loading.gif" />
     <Resource Include="Images\SearchFolder.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\AlbumView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\AlbumView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

@@ -22,9 +22,13 @@ namespace GalleryManegy.ViewModels
         public ICommand PictureSelectedCommand => new DelegateCommand(PictureSelected);
         public ICommand StartScanCommand => new DelegateCommand(OnStartScan);
         public ICommand OpenSettingsCommand => new DelegateCommand(OpenSettings);
+        public ICommand ChangeModeCommand => new DelegateCommand(ChangeMode);
 
         private bool _scanning;
         public bool Scanning { get => _scanning; set => SetProperty(ref _scanning, value); }
+
+        private bool _albumMode;
+        public bool AlbumMode { get => _albumMode; set => SetProperty(ref _albumMode, value); }
 
         private SettingModel? _rowSetting;
         public int RowCount 
@@ -57,6 +61,21 @@ namespace GalleryManegy.ViewModels
             }
         }
 
+        private double _rowWidth;
+        public double RowWidth { get { return _rowWidth; } set => SetProperty(ref _rowWidth, value); }
+
+        private ObservableCollection<ImageModel> _images;
+        public ObservableCollection<ImageModel> Images
+        {
+            get => _images;
+            set
+            {
+                SetProperty(ref _images, value);
+
+                SetProperty(nameof(ImagesInGrid));
+            }
+        }
+
         public ObservableCollection<ObservableCollection<ImageModel>> ImagesInGrid
         {
             get
@@ -83,21 +102,6 @@ namespace GalleryManegy.ViewModels
                 return output;
             }
             set { }
-        }
-
-        private double _rowWidth;
-        public double RowWidth { get { return _rowWidth; } set => SetProperty(ref _rowWidth, value); }
-
-        private ObservableCollection<ImageModel> _images;
-        public ObservableCollection<ImageModel> Images
-        {
-            get => _images;
-            set
-            {
-                SetProperty(ref _images, value);
-
-                SetProperty(nameof(ImagesInGrid));
-            }
         }
 
         public Action<IViewModel.Commands, object?> SendCommand { get; set; }
@@ -155,6 +159,18 @@ namespace GalleryManegy.ViewModels
         private void OpenSettings(object commandParameter)
         {
             SendCommand.Invoke(IViewModel.Commands.SelectedSettings, null);
+        }
+
+        private void ChangeMode(object sender)
+        {
+            if(AlbumMode)
+            {
+                AlbumMode = false;
+            }
+            else
+            {
+                AlbumMode = true;
+            }
         }
     }
 }

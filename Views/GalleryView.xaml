@@ -52,9 +52,31 @@
                 <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="50" />
             </Grid.ColumnDefinitions>
-
+            
+            <!-- Album Mode-->
             <Image Grid.Column="2"
+                   Cursor="Hand">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Setter Property="Source" Value="/Images/GalleryMode.png" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AlbumMode}" Value="true">
+                                <Setter Property="Source" Value="/Images/AlbumMode.png" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+                
+                <Image.InputBindings>
+                    <MouseBinding Gesture="LeftClick" 
+                                  Command="{Binding ChangeModeCommand}"/>
+                </Image.InputBindings>
+            </Image>
+
+            <!-- Start scanner -->
+            <Image Grid.Column="3"
                    Source="/Images/SearchFolder.png"
                    Cursor="Hand">
                 <Image.InputBindings>
@@ -63,12 +85,13 @@
                 </Image.InputBindings>
             </Image>
 
-            <Image Grid.Column="2"
+            <Image Grid.Column="3"
                    gif:AnimationBehavior.SourceUri="/Images/loading.gif"
                    Visibility="{Binding Path=Scanning, Converter={StaticResource BoolToVis}}"
                    Cursor="Wait">
             </Image>
 
+            <!-- Row amount -->
             <TextBox Text="{Binding Path=RowCount, UpdateSourceTrigger=PropertyChanged}" 
                      Grid.Column="1"
                      TextAlignment="Center"
@@ -76,8 +99,9 @@
                      FontSize="20"/>
 
 
+            <!-- Open Settings -->
             <Image Source="/Images/Gear.png" 
-                   Grid.Column="3"
+                   Grid.Column="4"
                    Cursor="Hand">
                 <Image.InputBindings>
                     <MouseBinding Gesture="LeftClick" 

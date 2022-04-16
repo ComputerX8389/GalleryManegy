@@ -94,39 +94,6 @@ namespace GalleryManegy.Handlers
             }
         }
 
-        public void UpdateImageListToMatchDatabase(ObservableCollection<ImageModel> List)
-        {
-            var allImagesDb = GetSurportedImages();
-            foreach (var imagedb in allImagesDb)
-            {
-                var imgList = List.FirstOrDefault(i => i.Id == imagedb.Id);
-
-                if (imgList != null)
-                {
-                    imgList.Update(imagedb);
-                }
-                else
-                {
-                    List.Add(imagedb);
-                }
-            }
-
-            List<ImageModel> toRemove = new();
-
-            foreach (var imageList in List)
-            {
-                if (!allImagesDb.Where(i => i.Id == imageList.Id).Any())
-                {
-                    toRemove.Add(imageList);
-                }
-            }
-
-            foreach (var image in toRemove)
-            {
-                List.Remove(image);
-            }
-        }
-
         public void SaveChanges()
         {
             DatabaseContext.SaveChanges();
