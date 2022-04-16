@@ -18,7 +18,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         
         <DataTemplate DataType = "{x:Type models:ImageModel}">
-            <Image Source="{Binding FullName}" 
+            <Image Source="{Binding Thumbnail}" 
                    Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.RowWidth}"
                    Cursor="Hand">
                 <Image.InputBindings>

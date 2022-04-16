@@ -6,18 +6,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using GalleryManegy.Models;
+using System.Drawing;
 
 namespace GalleryManegy.Handlers
 {
     internal class FileScanner
     {
+        private static Random Random = new();
         private readonly DatabaseHandler DatabaseHandler;
-
+        private readonly string ThumbnailPath;
         private bool Scanning;
 
         public FileScanner(DatabaseHandler databaseHandler)
         {
             DatabaseHandler = databaseHandler;
+            ThumbnailPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GalleryManegy");
+            Directory.CreateDirectory(ThumbnailPath);
         }
 
         public async Task ScanAsync()
@@ -93,13 +97,40 @@ namespace GalleryManegy.Handlers
             if (img == null)
             {
                 Debug.WriteLine($"Adding image {file.Name}");
-                DatabaseHandler.AddImage(new ImageModel(file));
+                var image = new ImageModel(file);
+                if (image.Unsupported == false)
+                {
+                    GenerateThumbnail(image);
+                }
+                DatabaseHandler.AddImage(image);
             }
             else
             {
                 Debug.WriteLine($"Updating image {file.Name}");
                 img.Update(file);
             }
+        }
+
+        private void GenerateThumbnail(ImageModel imageModel)
+        {
+            // Caculate width based in new height
+            var height = DatabaseHandler.GetSetting(SettingModel.SettingKeys.ThumbnailSize).ValueAsInt;
+            var diff = imageModel.Height / height;
+            var width = imageModel.Width / diff;
+
+            Image image = Image.FromFile(imageModel.FullName);
+            Image thumb = image.GetThumbnailImage(width, height, () => false, IntPtr.Zero);
+            var path = Path.Combine(ThumbnailPath, Path.ChangeExtension(RandomString(30), "thumb"));
+            thumb.Save(path);
+            imageModel.Thumbnail = path;
+        }
+
+        // Credit: https://stackoverflow.com/questions/1344221/how-can-i-generate-random-alphanumeric-strings
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[Random.Next(s.Length)]).ToArray());
         }
     }
 }

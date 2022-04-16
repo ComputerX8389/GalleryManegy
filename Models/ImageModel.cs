@@ -33,6 +33,9 @@ namespace GalleryManegy.Models
         private string _fullName = "";
         public string FullName { get => _fullName; set => SetProperty(ref _fullName, value); }
 
+        private string _thumbnail = "";
+        public string Thumbnail { get => _thumbnail; set => SetProperty(ref _thumbnail, value); }
+
         private int _width;
         public int Width { get => _width; set => SetProperty(ref _width, value); }
 

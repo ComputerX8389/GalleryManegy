@@ -22,6 +22,7 @@ namespace GalleryManegy.Handlers
             DefaultSettings = new();
             DefaultSettings.Add(SettingModel.SettingKeys.GalleryPath, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
             DefaultSettings.Add(SettingModel.SettingKeys.GalleryRowAmount, "6");
+            DefaultSettings.Add(SettingModel.SettingKeys.ThumbnailSize, "120");
 
             DatabaseContext.Database.Migrate();
         }
@@ -168,6 +169,11 @@ namespace GalleryManegy.Handlers
         public void RemoveRange(List<ImageModel> imageModel)
         {
             DatabaseContext.Images.RemoveRange(imageModel);
+        }
+
+        public void RemoveAllImages()
+        {
+            DatabaseContext.Images.RemoveRange(DatabaseContext.Images.Where(i => i.User.Id == User.Id));
         }
         #endregion
     }

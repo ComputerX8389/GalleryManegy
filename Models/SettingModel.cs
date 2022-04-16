@@ -49,7 +49,8 @@ namespace GalleryManegy.Models
         public enum SettingKeys
         {
             GalleryPath,
-            GalleryRowAmount
+            GalleryRowAmount,
+            ThumbnailSize,
         }
     }
 }
