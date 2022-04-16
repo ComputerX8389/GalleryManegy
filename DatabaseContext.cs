@@ -22,7 +22,7 @@ namespace GalleryManegy
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=GalleryManegy;Integrated Security=True;");
+            optionsBuilder.UseSqlServer("Server=localhost,1433;Database=GalleryManegy;User Id=sa;password=GUwNLNnmvD3Dn5DqprBs");
             //var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             //var filepath = Path.Combine(path, "GalleryManegy", "database.sql");
             //optionsBuilder.UseSqlite("Data Source=GalleryManegy.db");

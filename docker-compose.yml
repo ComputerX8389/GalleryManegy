@@ -1,0 +1,13 @@
+version: '3'
+services:
+  GalleryManegyMssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: GalleryManegyMssql
+    ports:
+      - "1433:1433"
+    environment:
+      - SA_PASSWORD=GUwNLNnmvD3Dn5DqprBs
+      - TZ=Europe/copenhagen
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
+  
