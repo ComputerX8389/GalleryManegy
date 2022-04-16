@@ -17,10 +17,13 @@ namespace GalleryManegy.Models
             Value = value;
             User = user;
         }
+
+        [Key]
+        public int Id { get; set; }
+
         private UserModel _user;
         public UserModel User { get { return _user; } set => SetProperty(ref _user, value); }
 
-        [Key]
         public SettingKeys Key { get; set; }
 
         private string _value = "";

@@ -30,7 +30,7 @@ namespace GalleryManegy.Handlers
         #region General
         public SettingModel GetSetting(SettingModel.SettingKeys key)
         {
-            var setting = DatabaseContext.Settings.FirstOrDefault(s => s.Key == key);
+            var setting = DatabaseContext.Settings.Where(i => i.User.Id == User.Id).FirstOrDefault(s => s.Key == key);
 
             if (setting != null)
             {
@@ -94,39 +94,6 @@ namespace GalleryManegy.Handlers
             }
         }
 
-        public void UpdateImageListToMatchDatabase(ObservableCollection<ImageModel> List)
-        {
-            var allImagesDb = GetSurportedImages();
-            foreach (var imagedb in allImagesDb)
-            {
-                var imgList = List.FirstOrDefault(i => i.Id == imagedb.Id);
-
-                if (imgList != null)
-                {
-                    imgList.Update(imagedb);
-                }
-                else
-                {
-                    List.Add(imagedb);
-                }
-            }
-
-            List<ImageModel> toRemove = new();
-
-            foreach (var imageList in List)
-            {
-                if (!allImagesDb.Where(i => i.Id == imageList.Id).Any())
-                {
-                    toRemove.Add(imageList);
-                }
-            }
-
-            foreach (var image in toRemove)
-            {
-                List.Remove(image);
-            }
-        }
-
         public void SaveChanges()
         {
             DatabaseContext.SaveChanges();
@@ -142,11 +109,6 @@ namespace GalleryManegy.Handlers
         public List<ImageModel> GetSurportedImages()
         {
             return DatabaseContext.Images.Where(i => i.User.Id == User.Id && i.Unsupported == false).ToList();
-        }
-
-        public void GetAlbums()
-        {
-            var result = DatabaseContext.Images.Select(i => i.FileLocation).Distinct().ToList();
         }
 
         public void AddImage(ImageModel imageModel)

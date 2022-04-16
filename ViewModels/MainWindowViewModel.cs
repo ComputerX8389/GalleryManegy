@@ -85,6 +85,10 @@ namespace GalleryManegy.ViewModels
                     SwitchView(new SettingsView());
                     break;
 
+                case IViewModel.Commands.SelectedRegister:
+                    SwitchView(new RegisterView());
+                    break;
+
                 case IViewModel.Commands.UserRegistered:
                     SwitchView(new LoginView());
                     break;

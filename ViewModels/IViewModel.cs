@@ -22,6 +22,7 @@ namespace GalleryManegy.ViewModels
             SelectedSettings,
             UserLogin,
             UserRegistered,
+            SelectedRegister,
         }
     }
 }

@@ -16,6 +16,7 @@ namespace GalleryManegy.ViewModels
         private DatabaseHandler DatabaseHandler;
 
         public ICommand LoginCommand => new DelegateCommand(Login);
+        public ICommand RegisterCommand => new DelegateCommand(Register);
 
         private string _username = "";
         public string Username
@@ -51,6 +52,11 @@ namespace GalleryManegy.ViewModels
             {
                 MessageBox.Show("Wrong username or password");
             }
+        }
+
+        private void Register(object sender)
+        {
+            SendCommand.Invoke(IViewModel.Commands.SelectedRegister, null);
         }
 
         public void SetDependencies(DatabaseHandler databaseHandler, ImageModel? currentImage)
