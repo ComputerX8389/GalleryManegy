@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 
 namespace GalleryManegy.Models
 {
-    internal class ImageModel : ModelBase
+    public class ImageModel : ModelBase
     {
         public ImageModel() { }
 

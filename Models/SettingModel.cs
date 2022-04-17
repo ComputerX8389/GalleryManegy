@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GalleryManegy.Models
 {
-    internal class SettingModel : ModelBase
+    public class SettingModel : ModelBase
     {
         public SettingModel() { }
         public SettingModel(SettingKeys key, string value, UserModel user)

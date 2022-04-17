@@ -15,7 +15,7 @@ using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
 {
-    internal class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase
     {
         private DatabaseHandler DatabaseHandler;
 

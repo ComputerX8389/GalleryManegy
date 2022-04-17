@@ -8,7 +8,7 @@ using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace GalleryManegy.Models
 {
-    internal class UserModel : ModelBase
+    public class UserModel : ModelBase
     {
         public int Id { get; set; }
 

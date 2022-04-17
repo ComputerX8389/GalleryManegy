@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
 {
-    internal class SettingsViewModel : ViewModelBase, IViewModel
+    public class SettingsViewModel : ViewModelBase, IViewModel
     {
         private DatabaseHandler DatabaseHandler;
         private int OriginalThumbnailSize;

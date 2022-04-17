@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
 {
-    internal class PictureViewModel : ViewModelBase, IViewModel
+    public class PictureViewModel : ViewModelBase, IViewModel
     {
         private ImageModel? _currentImage;
         public ImageModel? CurrentImage { get => _currentImage; set => SetProperty(ref _currentImage, value); }

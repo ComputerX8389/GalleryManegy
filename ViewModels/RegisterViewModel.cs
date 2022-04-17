@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
 {
-    internal class RegisterViewModel : ViewModelBase, IViewModel
+    public class RegisterViewModel : ViewModelBase, IViewModel
     {
         private DatabaseHandler DatabaseHandler;
 

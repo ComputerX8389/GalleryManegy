@@ -7,7 +7,7 @@ using static GalleryManegy.Handlers.DatabaseHandler;
 
 namespace GalleryManegy.Models
 {
-    internal class ComboDataModel
+    public class ComboDataModel
     {
         public ComboDataModel(SortingOptions id, string value)
         {

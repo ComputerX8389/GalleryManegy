@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GalleryManegy.Models
 {
-    internal class ModelBase : INotifyPropertyChanged
+    public class ModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)

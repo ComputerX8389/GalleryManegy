@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GalleryManegy.ViewModels
 {
-    internal interface IViewModel
+    public interface IViewModel
     {
         public void SetDependencies(DatabaseHandler DatabaseHandler, ImageModel? CurrentImage);
 

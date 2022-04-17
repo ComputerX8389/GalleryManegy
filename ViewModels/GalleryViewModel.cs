@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace GalleryManegy.ViewModels
 {
-    internal class GalleryViewModel : ViewModelBase, IViewModel
+    public class GalleryViewModel : ViewModelBase, IViewModel
     {
         private Size CurrentSize;
         private DatabaseHandler? DatabaseHandler;
@@ -175,8 +175,8 @@ namespace GalleryManegy.ViewModels
                 Scanning = true;
                 FileScanner.ScanAsync().ContinueWith((sender) =>
                 {
-                    Scanning = false;
                     Images = new(DatabaseHandler.GetSurportedImages());
+                    Scanning = false;
                 });
             }
         }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GalleryManegy.Handlers
 {
-    internal class DatabaseHandler
+    public class DatabaseHandler
     {
         private readonly DatabaseContext DatabaseContext;
         private readonly Dictionary<SettingModel.SettingKeys, string> DefaultSettings;
@@ -160,7 +160,7 @@ namespace GalleryManegy.Handlers
 
         public ImageModel? GetImageByFullName(string fullname)
         {
-            return DatabaseContext.Images.FirstOrDefault(i => i.FullName == fullname);
+            return DatabaseContext.Images.Where(i => i.User.Id == User.Id).FirstOrDefault(i => i.FullName == fullname);
         }
 
         public void RemoveImage(ImageModel imageModel)
