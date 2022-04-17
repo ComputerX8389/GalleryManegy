@@ -22,11 +22,15 @@ namespace GalleryManegy.ViewModels
         private UserModel _currentUser;
         public UserModel CurrentUser { get { return _currentUser; } set => SetProperty(ref _currentUser, value); }
 
+        private string _currentTitle;
+        public string CurrentTitle { get { return _currentTitle; } set => SetProperty(ref _currentTitle, value); }
+
         private FrameworkElement _currentView;
         public FrameworkElement CurrentView { get { return _currentView; } set => SetProperty(ref _currentView, value); }
 
         public MainWindowViewModel() : base("MainWindow")
         {
+            CurrentTitle = "Connecting to database...";
             SwitchView(new LoadingView());
             Task.Run(() =>
             {
@@ -62,6 +66,10 @@ namespace GalleryManegy.ViewModels
             {
                 viewModel.SetDependencies(DatabaseHandler, image);
                 viewModel.SendCommand = RunCommand;
+                if (CurrentView.DataContext is ViewModelBase viewModelBase)
+                {
+                    CurrentTitle = viewModelBase.FileName;
+                }
             }
             else
             {

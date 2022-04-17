@@ -61,13 +61,14 @@
 
             <ComboBox Width="200" 
                       HorizontalAlignment="Right"
-                      Margin="0,0,10,0"
+                      Margin="0,0,10,5"
                       ItemsSource="{Binding SortingOptions}"
                       SelectedValue="{Binding SelectedOrder}">
             </ComboBox>
 
             <Image Grid.Column="2"
                    Source="/Images/SearchFolder.png"
+                   Margin="0,0,0,5"
                    Cursor="Hand">
                 <Image.InputBindings>
                     <MouseBinding Gesture="LeftClick" 
@@ -78,17 +79,19 @@
             <Image Grid.Column="2"
                    gif:AnimationBehavior.SourceUri="/Images/loading.gif"
                    Visibility="{Binding Path=Scanning, Converter={StaticResource BoolToVis}}"
+                   Margin="0,0,0,5"
                    Cursor="Wait">
             </Image>
 
             <TextBox Text="{Binding Path=RowCount, UpdateSourceTrigger=PropertyChanged}" 
                      Grid.Column="1"
                      TextAlignment="Center"
-                     Height="30"
-                     FontSize="20"/>
+                     Margin="0,0,0,5"
+                     FontSize="15"/>
 
 
             <Image Source="/Images/Gear.png" 
+                   Margin="0,0,0,5"
                    Grid.Column="3"
                    Cursor="Hand">
                 <Image.InputBindings>

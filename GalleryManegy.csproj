@@ -6,12 +6,14 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
+	<PackageIcon>Logo LowRez.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Images\Dot Loading.gif" />
     <None Remove="Images\Gear.png" />
     <None Remove="Images\Loading.gif" />
+    <None Remove="Images\Logo LowRez.png" />
     <None Remove="Images\SearchFolder.png" />
   </ItemGroup>
 
@@ -30,7 +32,19 @@
     <Resource Include="Images\Dot Loading.gif" />
     <Resource Include="Images\Gear.png" />
     <Resource Include="Images\Loading.gif" />
+    <Resource Include="Images\Logo LowRez.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </Resource>
+    <Resource Include="Images\Logo.png" />
     <Resource Include="Images\SearchFolder.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Images\Logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
