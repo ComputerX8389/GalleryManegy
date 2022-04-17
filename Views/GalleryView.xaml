@@ -38,6 +38,11 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </DataTemplate>
+
+        <Style TargetType="ComboBox" x:Key="dfrnjkgkdfg">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontSize" Value="15" />
+        </Style>
     </UserControl.Resources>
 
     <Grid>
@@ -53,6 +58,13 @@
                 <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="50" />
             </Grid.ColumnDefinitions>
+
+            <ComboBox Width="200" 
+                      HorizontalAlignment="Right"
+                      Margin="0,0,10,0"
+                      ItemsSource="{Binding SortingOptions}"
+                      SelectedValue="{Binding SelectedOrder}">
+            </ComboBox>
 
             <Image Grid.Column="2"
                    Source="/Images/SearchFolder.png"

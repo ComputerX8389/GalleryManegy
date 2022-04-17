@@ -54,6 +54,7 @@ namespace GalleryManegy.Models
             GalleryPath,
             GalleryRowAmount,
             ThumbnailSize,
+            SelectedOrder
         }
     }
 }

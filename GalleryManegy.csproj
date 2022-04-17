@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Dot Loading.gif" />
     <None Remove="Images\Gear.png" />
     <None Remove="Images\Loading.gif" />
     <None Remove="Images\SearchFolder.png" />
@@ -26,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\Dot Loading.gif" />
     <Resource Include="Images\Gear.png" />
     <Resource Include="Images\Loading.gif" />
     <Resource Include="Images\SearchFolder.png" />

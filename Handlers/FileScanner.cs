@@ -15,7 +15,7 @@ namespace GalleryManegy.Handlers
         private static Random Random = new();
         private readonly DatabaseHandler DatabaseHandler;
         private readonly string ThumbnailPath;
-        private bool Scanning;
+        private static bool Scanning;
 
         public FileScanner(DatabaseHandler databaseHandler)
         {

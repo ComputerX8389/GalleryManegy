@@ -30,7 +30,8 @@ namespace GalleryManegy.ViewModels
         public void SetDependencies(DatabaseHandler databaseHandler, ImageModel? currentImage)
         {
             CurrentImage = currentImage;
-            Images = new(databaseHandler.GetSurportedImages());
+            Enum.TryParse(databaseHandler.GetSetting(SettingModel.SettingKeys.SelectedOrder).Value, out DatabaseHandler.SortingOptions selectedorderkey);
+            Images = new(databaseHandler.GetSurportedImages(selectedorderkey));
         }
 
         private void ExitPicture(object sender)

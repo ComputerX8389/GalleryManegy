@@ -16,6 +16,13 @@ namespace GalleryManegy.Handlers
 
         public UserModel User { get; set; }
 
+        public enum SortingOptions
+        {
+            CreationDate,
+            ScannedDate,
+            Imagesize
+        }
+
         public DatabaseHandler()
         {
             DatabaseContext = new();
@@ -23,6 +30,7 @@ namespace GalleryManegy.Handlers
             DefaultSettings.Add(SettingModel.SettingKeys.GalleryPath, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
             DefaultSettings.Add(SettingModel.SettingKeys.GalleryRowAmount, "6");
             DefaultSettings.Add(SettingModel.SettingKeys.ThumbnailSize, "120");
+            DefaultSettings.Add(SettingModel.SettingKeys.SelectedOrder, SortingOptions.ScannedDate.ToString());
 
             DatabaseContext.Database.Migrate();
         }
@@ -109,6 +117,38 @@ namespace GalleryManegy.Handlers
         public List<ImageModel> GetSurportedImages()
         {
             return DatabaseContext.Images.Where(i => i.User.Id == User.Id && i.Unsupported == false).ToList();
+        }
+
+        public List<ImageModel> GetSurportedImages(SortingOptions sorting)
+        {
+            // Does not for some reason. Need to change out the whole quary
+            //var quary = DatabaseContext.Images.Where(i => i.User.Id == User.Id && i.Unsupported == false);
+            //switch (sorting)
+            //{
+            //    case SortingOptions.CreationDate:
+            //        quary.OrderBy(i => i.Created);
+            //        break;
+            //    case SortingOptions.ScannedDate:
+            //        quary.OrderBy(i => i.Scanned);
+            //        break;
+            //    case SortingOptions.Imagesize:
+            //        quary.OrderBy(i => i.Size);
+            //        break;
+            //}
+            //var result = quary.ToList();
+            //return result;
+
+            switch (sorting)
+            {
+                case SortingOptions.CreationDate:
+                    return DatabaseContext.Images.Where(i => i.User.Id == User.Id && i.Unsupported == false).OrderByDescending(i => i.Created).ToList();
+                case SortingOptions.ScannedDate:
+                    return DatabaseContext.Images.Where(i => i.User.Id == User.Id && i.Unsupported == false).OrderByDescending(i => i.Scanned).ToList();
+                case SortingOptions.Imagesize:
+                    return DatabaseContext.Images.Where(i => i.User.Id == User.Id && i.Unsupported == false).OrderBy(i => i.Size).ToList();
+                default:
+                    return GetSurportedImages();
+            }
         }
 
         public void AddImage(ImageModel imageModel)

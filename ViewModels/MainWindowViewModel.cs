@@ -17,7 +17,7 @@ namespace GalleryManegy.ViewModels
 {
     internal class MainWindowViewModel : ViewModelBase
     {
-        private readonly DatabaseHandler DatabaseHandler;
+        private DatabaseHandler DatabaseHandler;
 
         private UserModel _currentUser;
         public UserModel CurrentUser { get { return _currentUser; } set => SetProperty(ref _currentUser, value); }
@@ -27,16 +27,32 @@ namespace GalleryManegy.ViewModels
 
         public MainWindowViewModel() : base("MainWindow")
         {
-            DatabaseHandler = new();
+            SwitchView(new LoadingView());
+            Task.Run(() =>
+            {
+                try
+                {
+                    DatabaseHandler = new();
+                }
+                catch (Exception exe)
+                {
+                    MessageBox.Show("Cant open database");
+                    Debug.WriteLine(exe.Message);
+                    Environment.Exit(0);
+                }
+            }).ContinueWith(_ =>
+            {
+                if (DatabaseHandler.AnyUsers())
+                {
+                    SwitchView(new LoginView());
+                }
+                else
+                {
+                    SwitchView(new RegisterView());
+                }
+                // Fix for strange sta problem: https://stackoverflow.com/questions/63874479/task-delayn-system-invalidoperationexception-the-calling-thread-must-be-sta
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
-            if (DatabaseHandler.AnyUsers())
-            {
-                SwitchView(new LoginView());
-            }
-            else
-            {
-                SwitchView(new RegisterView());
-            }
         }
 
         public void SwitchView(FrameworkElement view, ImageModel? image = null)

@@ -18,6 +18,14 @@ namespace GalleryManegy.ViewModels
         private Size CurrentSize;
         private DatabaseHandler? DatabaseHandler;
         private FileScanner? FileScanner;
+        private SettingModel OrderSetting;
+
+        public List<ComboDataModel> SortingOptions { get; private set; } = new()
+        {
+            new(DatabaseHandler.SortingOptions.CreationDate, "Creation date"),
+            new(DatabaseHandler.SortingOptions.ScannedDate, "Scanned date"),
+            new(DatabaseHandler.SortingOptions.Imagesize, "Image size")
+        };
 
         public ICommand PictureSelectedCommand => new DelegateCommand(PictureSelected);
         public ICommand StartScanCommand => new DelegateCommand(OnStartScan);
@@ -25,6 +33,22 @@ namespace GalleryManegy.ViewModels
 
         private bool _scanning;
         public bool Scanning { get => _scanning; set => SetProperty(ref _scanning, value); }
+
+        private ComboDataModel _selectedOrder;
+        public ComboDataModel SelectedOrder { get => _selectedOrder;
+            set
+            {
+                SetProperty(ref _selectedOrder, value);
+                OrderSetting.Value = value.SortingOption.ToString();
+
+                if (DatabaseHandler != null)
+                {
+                    DatabaseHandler.SaveChanges();
+                    var list = DatabaseHandler.GetSurportedImages(value.SortingOption);
+                    Images = new(list);
+                }
+            }
+        }
 
         private SettingModel? _rowSetting;
         public int RowCount 
@@ -115,7 +139,12 @@ namespace GalleryManegy.ViewModels
             
             _rowSetting = DatabaseHandler.GetSetting(SettingModel.SettingKeys.GalleryRowAmount);
             RowCount = _rowSetting.ValueAsInt;
-            Images = new(DatabaseHandler.GetSurportedImages());
+
+            // Convert string back to enum
+            OrderSetting = DatabaseHandler.GetSetting(SettingModel.SettingKeys.SelectedOrder);
+            Enum.TryParse(OrderSetting.Value, out DatabaseHandler.SortingOptions selectedorderkey);
+            SelectedOrder = SortingOptions.FirstOrDefault(s => s.SortingOption == selectedorderkey);
+
             ScanForImages();
         }
 
