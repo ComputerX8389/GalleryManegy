@@ -86,7 +86,7 @@ namespace GalleryManegyTests
                 return;
             }
 
-            db.User = user;
+            db.CurrentUser = user;
 
             var gallerSetting = db.GetSetting(SettingModel.SettingKeys.GalleryPath);
             gallerSetting.Value = imagedir;

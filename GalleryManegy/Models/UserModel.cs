@@ -34,6 +34,11 @@ namespace GalleryManegy.Models
         private DateTime _lastLogin;
         public DateTime LastLogin { get => _lastLogin; set => SetProperty(ref _lastLogin, value); }
 
+        /// <summary>
+        /// Returns true if given password is correct
+        /// </summary>
+        /// <param name="password"> Password to check </param>
+        /// <returns></returns>
         public bool CheckPassword(string password)
         {
             return BCryptNet.Verify(password, Password);

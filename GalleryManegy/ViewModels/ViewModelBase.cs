@@ -23,6 +23,7 @@ namespace GalleryManegy.ViewModels
             FileName = filename;
         }
 
+        // Stolen from MVVM demo projekt
         protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))

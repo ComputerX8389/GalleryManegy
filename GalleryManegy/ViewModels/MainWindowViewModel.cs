@@ -100,7 +100,7 @@ namespace GalleryManegy.ViewModels
                     if (data is UserModel user)
                     {
                         CurrentUser = user;
-                        DatabaseHandler.User = CurrentUser;
+                        DatabaseHandler.CurrentUser = CurrentUser;
                         SwitchView(new GalleryView());
                     }
                     break;

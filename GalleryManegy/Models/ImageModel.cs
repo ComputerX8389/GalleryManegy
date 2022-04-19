@@ -60,7 +60,7 @@ namespace GalleryManegy.Models
         private bool _unsupported;
         public bool Unsupported { get => _unsupported; set => SetProperty(ref _unsupported, value); }
 
-        // Todo Get from settings
+        // Should properly be a config file
         private readonly List<string> AllowedExtensions = new()
         {
             "PNG",
@@ -68,7 +68,11 @@ namespace GalleryManegy.Models
             "JPG"
         };
 
-        internal void Update(ImageModel imagedb)
+        /// <summary>
+        /// Update model to match given model
+        /// </summary>
+        /// <param name="imagedb"> model to match </param>
+        public void Update(ImageModel imagedb)
         {
             FileName = imagedb.FileName;
             FileLocation = imagedb.FileLocation;
@@ -82,6 +86,11 @@ namespace GalleryManegy.Models
             Height = imagedb.Height; 
         }
 
+        /// <summary>
+        /// Update model to match file.
+        /// ImageModel.Unsupported will be true if file is not image
+        /// </summary>
+        /// <param name="file"></param>
         public void Update(FileInfo file)
         {
             FileName = file.Name;

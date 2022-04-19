@@ -24,6 +24,10 @@ namespace GalleryManegy.Handlers
             Directory.CreateDirectory(ThumbnailPath);
         }
 
+        /// <summary>
+        /// Scan after images and update database accordingly
+        /// </summary>
+        /// <returns></returns>
         public async Task ScanAsync()
         {
             var path = DatabaseHandler.GetSetting(SettingModel.SettingKeys.GalleryPath);

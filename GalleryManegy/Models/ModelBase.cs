@@ -10,6 +10,7 @@ namespace GalleryManegy.Models
 {
     public class ModelBase : INotifyPropertyChanged
     {
+        // Stolen from MVVM demo projekt
         public event PropertyChangedEventHandler? PropertyChanged;
         protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
         {

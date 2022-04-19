@@ -29,6 +29,9 @@ namespace GalleryManegy.Models
         private string _value = "";
         public string Value { get => _value; set => SetProperty(ref _value, value); }
 
+        /// <summary>
+        /// Converts setting vaule to an int
+        /// </summary>
         [NotMapped]
         public int ValueAsInt 
         {
@@ -49,6 +52,9 @@ namespace GalleryManegy.Models
             } 
         }
 
+        /// <summary>
+        /// All diffenrent setting types
+        /// </summary>
         public enum SettingKeys
         {
             GalleryPath,

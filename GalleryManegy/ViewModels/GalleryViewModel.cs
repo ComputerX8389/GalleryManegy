@@ -20,6 +20,9 @@ namespace GalleryManegy.ViewModels
         private FileScanner? FileScanner;
         private SettingModel OrderSetting;
 
+        /// <summary>
+        /// List of soring options. That can be selected to update images list order
+        /// </summary>
         public List<ComboDataModel> SortingOptions { get; private set; } = new()
         {
             new(DatabaseHandler.SortingOptions.CreationDate, "Creation date"),
@@ -148,6 +151,11 @@ namespace GalleryManegy.ViewModels
             ScanForImages();
         }
 
+        /// <summary>
+        /// Cant bind to window size change
+        /// Workaround for WPF lack of image scaling in lists
+        /// </summary>
+        /// <param name="newSize"></param>
         public void OnChangeSize(Size newSize)
         {
             // - 5 to acount for scroolbar
